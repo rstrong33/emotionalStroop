@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<!--[if lt IE 10]>
+
+    <script type="text/javascript">
+
+        alert("The content of this web page may not work as intended in " +
+              "the current browser. " +
+              "Internet Explorer 10 or newer is required for full functionality.");
+    </script>
+
+<![endif]-->
+
+<head>
+
+<!-- Metadata ************************************************************** -->
+
+    <meta charset="UTF-8">
+    <meta name="description" content="Stroop Test">
+    <meta name="copyright" content="2020 The Many Brains Project, Inc.">
+    <meta name="author" content="Luke Scheuer, modified by Roger Strong">
+    <meta name="keywords" content="cognitive test, brain test">
+
+    <!-- Configs for mobiles -->
+
+    <!-- Set the viewport. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Allow web app to be run in full-screen mode. -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- Make the app title different than the page title. -->
+    <meta name="apple-mobile-web-app-title" content="Stroop">
+
+    <!-- Icons. -->
+
+    <link rel="apple-touch-icon" sizes="180x180" href="../../images/icons/apple-touch-icon.png">
+    <!--<link rel="shortcut icon" href="../../images/icons/favicon.ico">-->
+
+
+    <!-- End of metadata ******************************************************* -->
+
+<!-- © 2019 The Many Brains Project, Inc.
+
+
+-->
+
+<!-- Title ***************************************************************** -->
+
+    <title>Stroop Task</title>
+
+<!-- End of Title ********************************************************** -->
+
+<!-- css Style declarations ************************************************ -->
+
+    <style type="text/css">
+
+        *
+        {
+            border-radius: 0;
+            box-sizing: border-box;
+        }
+
+        *::after, *::before
+        {
+            box-sizing: border-box;
+        }
+
+        body
+        {
+            width: 100vw;
+            height: 100vh;
+            margin: auto;
+            background: white;
+            color: #000000;
+            font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+            font-size: 13pt;
+            text-align: center;
+        }
+
+        .button
+        {
+            border: 2px solid #f1c40f;
+            border-radius: 1em;
+            background: transparent;
+            color: #000000;
+            box-shadow: 0 5px 15px 5px grey
+        }
+
+        .button:active
+        {
+            box-shadow: 0 5px 15px 1px lightgrey
+        }
+
+        .button:focus
+        {
+            outline: none
+        }
+
+        #fixationCross
+        {
+            display: none;
+            width: 200px;
+            height: 200px;
+            position: absolute;
+            font-size: 100pt;
+            left: 50%;
+            top: 50%;
+            margin-top: -100px;
+            margin-left: -100px
+        }
+
+        .responseButton
+        {
+            -webkit-appearance: none;
+            background: white;
+            font-size: 50pt;
+            width: 120px;
+            height:120px;
+            margin: 5px;
+            padding: 0;
+            text-align: center;
+            -webkit-border-radius: 50%;
+            -moz-border-radius: 50%;
+            border-radius: 50%;
+        }
+
+        .responseButton:focus
+        {
+            outline: none
+        }
+
+        #red{
+            border: 5px solid black;
+            color: black;
+            box-shadow: 0 9px rgb(0,0,0);
+            position: absolute;
+            left: 50%;
+            top: 50%;
+        }
+
+        #red:active{
+            box-shadow: 0 5px rgb(0,0,0);
+            transform: translateY(4px);
+        }
+
+        #blue{
+            border: 5px solid black;
+            color: black;
+            box-shadow: 0 9px rgb(0,0,0);
+            position: absolute;
+            left: 50%;
+            top: 50%;
+        }
+
+        #blue:active{
+            box-shadow: 0 5px rgb(0,0,0);
+            transform: translateY(4px);
+        }
+
+
+        #green{
+            border: 5px solid black;
+            color: black;
+            box-shadow: 0 9px rgb(0,0,0);
+            position: absolute;
+            left: 50%;
+            top: 50%;
+        }
+
+        #green:active{
+            box-shadow: 0 5px rgb(0,0,0);
+            transform: translateY(4px);
+        }
+
+        #yellow{
+            border: 5px solid rgb(0,0,0);
+            color: rgb(0,0,0);
+            box-shadow: 0 9px rgb(0,0,0);
+            position: absolute;
+            left: 50%;
+            top: 50%;
+        }
+
+        #yellow:active{
+            box-shadow: 0 5px rgb(0,0,0);
+            transform: translateY(4px);
+        }
+
+        #purple{
+            border: 5px solid rgb(0,0,0);
+            color: rgb(0,0,0);
+            box-shadow: 0 9px rgb(0,0,0);
+            position: absolute;
+            left: 50%;
+            top: 50%;
+        }
+
+        #purple:active{
+            box-shadow: 0 5px rgb(0,0,0);
+            transform: translateY(4px);
+        }
+
+
+        #orange{
+            border: 5px solid rgb(0,0,0);
+            color: rgb(0,0,0);
+            box-shadow: 0 9px rgb(0,0,0);
+            position: absolute;
+            left: 50%;
+            top: 50%;
+        }
+
+        #orange:active{
+            box-shadow: 0 5px rgb(0,0,0);
+            transform: translateY(4px);
+        }
+
+        .topButton{
+            margin-top:-228.5px;
+        }
+
+        .bottomButton{
+            margin-top:100px;
+        }
+
+        .rightButton{
+            margin-left:5px;
+        }
+        .leftButton{
+            margin-left:-125px;
+        }
+
+        #alertButton{
+            background-color: white;
+        }
+
+
+        #responseContainer
+        {
+            display: none;
+            width: 600px;
+            height: 550px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-left: -300px;
+            margin-top: -275px;
+        }
+
+        #stroopTarget{
+            display: block;
+            width: 600px;
+            height: 200px;
+            position: absolute;
+            text-align: center;
+            font-size: 80px;
+            left: 50%;
+            top: 50%;
+            margin-top: -100px;
+            margin-left: -300px;
+            padding: 40px;
+        }
+        
+        #stroopTargetPhoto{
+            display: block;
+            width: 200px;
+            height: 200px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-top: -100px;
+            margin-left: -100px;
+            display: none;
+        }
+        
+        #whiteOval{
+            display: block;
+            width: 200px;
+            height: 200px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-top: -100px;
+            margin-left: -100px;
+            display: none;
+        }
+        
+        #mainphoto{
+            display: block;
+            width: 200px;
+            height: 200px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-top: -100px;
+            margin-left: -100px;
+        }
+        
+        #oval{
+            display: block;
+            width: 200px;
+            height: 200px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-top: -100px;
+            margin-left: -100px;
+        }
+        
+        #colorFilter{
+            display: block;
+            opacity: 0.5;
+            width: 200px;
+            height: 200px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-top: -100px;
+            margin-left: -100px;
+            display: none;
+        }
+
+
+
+    </style>
+
+<!-- end of css Style declarations ***************************************** -->
+
+<!-- required js libraries ************************************************* -->
+
+    <script type="text/javascript" src="TestMyBrain.12.18.min.js"></script>
+
+<!-- end of required js libraries ****************************************** -->
+
+<!-- js script ************************************************************* -->
+
+<script type="text/javascript">
+	var stroop_version = getUrlParameters("stroop_version", "", true); //color, emotional_words, faces, scenes
+	var blocked = getUrlParameters("blocked", "", true); //color, emotional_words, faces, scenes
+    var testVersion;                // version identifier for this test
+    var frameSequence = [];         // object containing the sequence of frames and their properties
+    var frame;                      // single frame object
+    var ch;                         // chain of timeouts for stimulus presentation
+    var results = [];               // array to store trials details and responses
+    var outcomes = {};              // object containing outcome variables
+    var seed;                       // URL parameter: random number generator seed
+    var demo;                       // URL parameter: run in demo mode
+    var debug;                      // URL parameter: output to console
+    var showresults;                // URL parameter: if they want to show results in a popup window
+    var autosave;                   // URL parameter: if they want to save data in a file automatically
+    var filename;                   // URL parameter: filename for data
+    var usage = "";                 // URL parameter: show usage
+    var iti = getUrlParameters("iti", "", true); //iti fixed or variable?
+    if (iti == 'fixed'){
+    	var fixationTime = 1000;   // amount of time in ms fixation cross is shown
+    } else if (iti == 'variable'){
+    	var fixationTime = [700, 900, 1100, 1300, 1500];   // amount of time in ms fixation cross is shown - RS got this from choiceRT
+    }
+    var responseTime = 5000;        // amount of time in ms participant has to respond
+    var nFaces = 6;
+    var nScenes = 6;
+    var scene_height = 180;
+    
+    //wordlist to use
+    if (stroop_version == 'color'){
+    	var wordsArray = ["red","blue"];
+    	var stim_type = 'word';
+    } else if (stroop_version == 'emotional_words'){
+    	var wordsArray = ['ankle',
+'appliance',
+'avenue',
+'book',
+'clock',
+'custom',
+'detail',
+'fabric',
+'detail',
+'hammer',
+'hat',
+'glass',
+'ketchup',
+'knot',
+'lawn',
+'manner',
+'month', 
+'muddy',
+'patient',
+'passage',
+'office',
+'journal',
+'nonsense',
+'sentiment',
+'theory',
+'writer',
+'agony',
+'afraid',
+'assault',
+'bomb',
+'burn',
+'danger',
+'disaster',
+'enraged',
+'gun',
+'fight',
+'hatred',
+'intruder',
+'killer',
+'nightmare',
+'venom',
+'pain', 
+'riot',
+'scared',
+'scream',
+'slaughter',
+'terrified',
+'torture',
+'trauma',
+'violent',
+'weapon', 
+'war'];
+		var stim_type = 'word';
+    } else if (stroop_version == 'faces'){
+    	var stim_type = 'face';
+    	var folder = 'Faces';
+    	var nImages = nFaces
+    	var ext = '.png';
+    } else if (stroop_version == 'scenes'){
+    	var folder = 'Scenes';
+    	var stim_type = 'picture';
+    	nImages = nScenes;
+    	var ext = '.png';
+    }
+    var colorArray =
+        ["red","blue"];          //colors to use
+    var supportedColors =
+        ["purple","red","yellow","blue","green","orange"];    //colors supported by this version of the Stroop Task
+    var numTrials = 48;             //number of trials
+    var percentCongruent = 50;      //percentage of trials that should be congruent - set to 0 if not using rgby
+    var allowRepeatWord = 3;        //number of times words can repeat (set to 0 for no repeats)
+    var allowRepeatColor = 3;       //number of times colors can repeat (set to 0 for no repeats)
+    var allowPerfectRepeat = 0;     //number of times color AND word can repeat (set to 0 for no repeats)
+    var onlyShowRelevant = "true"; //URL parameter: whether to delete some irrelevant info from outcomes, like the colors in unused buttons
+
+    tmbUI.onreadyUI = function()
+    {
+        var correct;
+
+
+        // clear the stimulus chain, in case it's still running
+        clearChainTimeouts(ch);
+
+        // if we are debugging and there was an error, log the message
+        if(debug === 'true' && tmbUI.message) console.log(tmbUI.message);
+
+        //if the color of the word matches
+        //the color of the button, the trial
+        //is correct, and we mark it as such
+        correct = (frame.color === tmbUI.response) ? 1:0;
+
+        // store the results
+        results.push(
+            {
+                type: frame.type, // one of practice or test
+                wordColor:frame.color, //color of word
+                wordText:frame.word, //word shown,
+                image:frame.image, //image shown
+                condition: frame.condition, //threat, neutral, or empty
+                response: tmbUI.response, // button pressed
+                correct: correct, // boolean correct
+                rt: tmbUI.rt, // delay b/w onset and response
+                dwell:tmbUI.dwell,
+                state: tmbUI.status // state of the response handler
+            });
+
+
+        // if we are debugging, log the results
+        if(debug === 'true')
+        {
+            logResults(results,'inc');
+        }
+
+        // if the input event returns a timeout,
+        // stop the sequence and advise the participant
+        if(tmbUI.status === "timeout")
+        {
+            showAlert("You are taking too long to respond.<br><br>",
+                "Click here to retry",
+                function()
+                {
+                    showFrame(null);
+                    // rewind the frame sequence by one frame,
+                    // so that the same frame is displayed again
+                    frameSequence.unshift(frame);
+                    setTimeout(function(){nextTrial();},1000);
+                },
+                '20pt');
+        }
+        else if (frame.type==="practice" && !correct){
+
+            var alertMessage = "Incorrect.<br><br>" +
+                "The word was colored <b style = 'color:"+frame.color+"'>" +frame.color+ "</b>. <br>" +
+                "You should have pressed the <b style = 'color:"+frame.color+"'>" +frame.color+ "</b> button<br><br>";
+            showAlert(alertMessage,
+                "Click here to retry",
+                function()
+                {
+                    showFrame(null);
+                    frameSequence.unshift(frame);
+                    setTimeout(function(){nextTrial();},1000);
+                },
+                '20pt');
+        }
+        else if (frame.type==="practice" && correct){
+            showAlert("Correct!",
+                "",
+                nextTrial,
+                '30pt',
+                1000);
+        }
+        else {
+            nextTrial();
+        }
+
+    };
+
+
+
+
+    function nextTrial()
+    {
+        // read the frame sequence one frame at a time
+        frame = frameSequence.shift();
+        if(frame)
+        {
+            // check if it's the startup frame
+            if (frame.type === "begin") {
+                showAlert(frame.message,
+                    "Click here to begin",
+                    function () {
+                        nextTrial();
+                    },
+                    '20pt');
+            }
+            // else if it's a message frame, show it
+            else if (frame.type === "message") {
+                showAlert(frame.message,
+                "Click here to continue",
+                function ()
+                {
+                   showFrame("null");
+                   nextTrial();
+                },
+                '20pt');
+            }
+            // deal with practice and test frames
+            else
+            {
+
+
+
+                // chain the stimulus presentation
+                ch = chainTimeouts(
+                    function()
+                    {
+                        requestAnimationFrame(function()
+                        {
+                            var divsToShow = colorArray.invoke(function(e){return e+"Div";})
+                                .concat(["responseContainer"]);
+                            showFrame(divsToShow);
+                        });
+                    },
+                    1000,
+                function()
+                {
+                    requestAnimationFrame(function()
+                    {
+                        var divsToShow = colorArray.invoke(function(e){return e+"Div";})
+                            .concat(["responseContainer","fixationCross"]);
+                        showFrame(divsToShow);
+                    });
+                },
+                frame.delay_time,
+                function()
+                {
+                    requestAnimationFrame(function()
+                    {
+                        if (stroop_version == 'faces'){
+                        	getID("mainphoto").src = frame.image;
+                        	getID("colorFilter").style.background = frame.color;
+                        	var divsToShow = colorArray.invoke(function(e){return e+"Div";})
+                        	.concat(["responseContainer","stroopPhoto","stroopTargetPhoto", "colorFilter", "whiteOval"]); 
+                        } else if (stroop_version == 'scenes'){
+                        	getID("mainphoto").src = frame.image;
+                        	getID("colorFilter").style.background = frame.color;
+                        	var divsToShow = colorArray.invoke(function(e){return e+"Div";})
+                        	.concat(["responseContainer","stroopPhoto","stroopTargetPhoto", "colorFilter"]);                        	
+                        } else {
+                        	getID("stroopTarget").innerHTML = frame.word.toUpperCase();
+                        	getID("stroopTarget").style.color = frame.color;
+                        	var divsToShow = colorArray.invoke(function(e){return e+"Div";})
+                        	.concat(["responseContainer","stroopTarget"]);
+                        }
+                        showFrame(divsToShow);
+                        tmbUI.getInput();
+                    });
+                });
+            }
+        }
+        // else if the sequence is empty, we are done!
+        else
+        {
+
+            // outcomes computations
+            var tmp1, tmp2, tmp3,score;
+
+            // extract test trials
+            tmp1 = results.filter(function( obj ) {return obj.type !== 'practice' &&
+                                                          obj.state !== 'timeout';});
+
+            // compute all-correct stats
+            tmp2 = tmp1.filter(function( obj ) {return obj.correct === 1;});
+            tmp3 = tmp2.pluck("rt");
+
+            // response device
+            var tmp5 = tmp1[0].state;
+            tmp5 = /key/i.test(tmp5) ? 'keyboard' :
+                   /touch/i.test(tmp5) ? 'touch' :
+                   /mouse/i.test(tmp5) ? 'mouse' :
+                   /pen/i.test(tmp5) ? 'pen' :
+                   'unknown';
+
+            var tmpCongruent = tmp1.filter(function( obj ) {return obj.wordText === obj.wordColor;});
+            var tmpCongruentC = tmpCongruent.filter(function( obj ) {return obj.correct === 1;});
+            var tmpIncongruent = tmp1.filter(function( obj ) {return obj.wordText !== obj.wordColor;});
+            var tmpIncongruentC = tmpIncongruent.filter(function( obj ) {return obj.correct === 1;});
+
+
+
+            outcomes["topLeft"]="unused";
+            outcomes["topRight"]="unused";
+            outcomes["bottomLeft"]="unused";
+            outcomes["bottomRight"]="unused";
+            for(var i=0;i<supportedColors.length;i++){
+                var color = supportedColors[i];
+                if (colorArray.includes(color)){
+                    var colorLocation ="";
+                    //we figure out where the buttons were
+                    //by the class names we assigned them
+                    //earlier
+                    if (getID(color).className.indexOf("topButton")!==-1)
+                        colorLocation+="top";
+                    else colorLocation+="bottom";
+
+                    if (getID(color).className.indexOf("leftButton")!==-1)
+                        colorLocation+="Left";
+                    else if (getID(color).className.indexOf("rightButton")!==-1)
+                        colorLocation+="Right";
+
+                    outcomes[colorLocation] = color;
+                    outcomes[color+"Location"] = colorLocation;
+                }
+                else outcomes[color+"Location"] = "unused"
+            }
+            //remove any unused colors if we only want to show relevant info
+            if (onlyShowRelevant === "true")
+                Object.keys(outcomes).filter(function(value){return outcomes[value]==="unused"}).forEach(function(value){delete outcomes[value]});
+
+
+            outcomes.accuracy = tmp1.pluck("correct").average().round(4);
+            outcomes.meanRT = tmp1.pluck("rt").average().round(4);
+            outcomes.medianRT = tmp1.pluck("rt").median().round(4);
+            outcomes.sdRT = tmp1.pluck("rt").sd().round(4);
+            outcomes.meanRTc = tmp3.average().round(4);
+            outcomes.medianRTc = tmp3.median().round(4);
+            outcomes.sdRTc = tmp3.sd().round(4);
+            
+            //congruent
+            outcomes.congruentAccuracy = tmpCongruent.pluck("correct").average().round(4);
+            outcomes.congruentMeanRT = tmpCongruent.pluck("rt").average().round(4);
+            outcomes.congruentMedianRT = tmpCongruent.pluck("rt").median().round(4);
+            outcomes.congruentSDRT = tmpCongruent.pluck("rt").sd().round(4);
+            outcomes.congruentMeanRTc = tmpCongruentC.pluck("rt").average().round(4);
+            outcomes.congruentMedianRTc = tmpCongruentC.pluck("rt").median().round(4);
+            outcomes.congruentSDRTc = tmpCongruentC.pluck("rt").sd().round(4);
+            
+            //incongruent
+            outcomes.incongruentAccuracy = tmpIncongruent.pluck("correct").average().round(4);
+            outcomes.incongruentMeanRT = tmpIncongruent.pluck("rt").average().round(4);
+            outcomes.incongruentMedianRT = tmpIncongruent.pluck("rt").median().round(4);
+            outcomes.incongruentSDRT = tmpIncongruent.pluck("rt").sd().round(4);
+            outcomes.incongruentMeanRTc = tmpIncongruentC.pluck("rt").average().round(4);
+            outcomes.incongruentMedianRTc = tmpIncongruentC.pluck("rt").median().round(4);
+            outcomes.incongruentSDRTc = tmpIncongruentC.pluck("rt").sd().round(4);
+
+
+            //score is conflict reaction time
+            outcomes.score = score = outcomes.incongruentMeanRTc - outcomes.congruentMeanRTc;
+            outcomes.colorArray = colorArray;
+            outcomes.wordArray = wordsArray;
+            outcomes.responseDevice = tmp5;
+            outcomes.testVersion = testVersion;
+
+            
+
+            // if debugging, output to console
+            if(debug === "true") logResults([outcomes], 'cum');
+
+            // we either save locally or to the server
+            if(showresults === "true" || autosave === 'true' || filename)
+            {
+                showAlert("<br>You got" + score.toFixed(2).toString() + " points." +
+                          "<br>The test is over.<br>" +
+                          "Thank you for participating!<br><br>",
+                          "",
+                          null,
+                          '20pt');
+
+                setTimeout(function()
+                {
+                    if(filename === false) filename = "Stroop"+"results.csv";
+                    tmbSubmitToFile(results,filename,autosave);
+                },2000);
+            }
+            else
+            {
+                tmbSubmitToServer(results,score,outcomes);
+            }
+        }
+    }
+
+    function setFrameSequence()
+    {
+
+		
+        var testMessage;
+
+        // messages
+        testMessage =
+            {
+                "begin": "<h3>Stroop Effect Test</h3><img style='max-width:400px;margin-top: -35px;'" +
+                            " src='stroop_instructions.png'><br><br>",
+                "practice": ["<h2>Instructions</h2>" +
+                             "Press the button that is the same <br><b>color</b> as the word you" +
+                             " see<br> in the center of the screen.<br><br>" +
+                             "Make sure you respond only with <br>the <b>COLOR</b> of the word<br><br>",
+                             "Let's do some practice!<br><br><br><br>",
+                             "Great work! <br><br>Now, we'll make things<br> more difficult!<br><br>" +
+                             "Starting now, the words you<br> see will also be colors.<br><br>",
+                             "The words could be the same <br>as the colors you see, or different.<br><br>" +
+                             "Either way, you should still<br> press the button that <br>" +
+                             "is the same COLOR as the word,<br>" +
+                             " regardless of the meaning of the word.<br><br>",
+                             "For example, if you saw this word:<br><img style='max-width:360px' src='stroop_task.png'><br>" +
+                             "You would press the \"R\"(red) button,<br> because the font color is <b>red</b>.<br><br>",
+                             "Let's do one more practice session<br> with this new rule.<br><br> Get ready!<br><br><br>"],
+                "test": ["Excellent work!<br><br> With this, we are ready<br>to begin the experiment. <br><br>" +
+                "Try to respond as <b>quickly</b> <br>and as <b>accurately</b> as you can.<br><br><br>"]
+            };
+
+		/*
+        // type of frame to display
+        Math.seedrandom ="StroopPractice";
+        var frameType = ["begin","message","message",
+            "practice","practice",
+            "message","message","message","message",
+            "practice", "practice","practice","practice","message"];
+
+        // message to display
+        var frameMessage = [testMessage.begin,testMessage.practice[0],testMessage.practice[1],
+                            "","",
+                            testMessage.practice[2],testMessage.practice[3],
+                            testMessage.practice[4],testMessage.practice[5],
+                            "","","","",testMessage.test[0]];
+        var word = ["","","","WORD","WORD","","","","","YELLOW","green","red","red",""];
+        var color = ["","","",colorArray[0],colorArray[1],"","","","",
+                    colorArray[0],colorArray[0],colorArray[1],colorArray[0],""];
+
+        // push all components into the frames chain
+        for(var i = 0; i < frameType.length; i++)
+        {
+            frameSequence.push(
+                {
+                    type:frameType[i],
+                    message:frameMessage[i],
+                    word:word[i],
+                    color:color[i],
+                    image: 'Images/Faces/N1.png'
+                });
+        }*/
+
+
+        //now that we have completed the practice
+        //let's build the test trials
+
+        var previousWord ="";
+        var previousColor = "";
+        var wordRepeats = 0;
+        var colorRepeats = 0;
+        var perfectRepeats = 0;
+
+
+        if((percentCongruent>0 && percentCongruent<=100))
+        {
+            // create a shuffled array of congruence categories
+            // with defined marginal probabilities
+            var numCongruent = Math.floor((percentCongruent / 100) * numTrials);
+            var congruentSeq = new Array(numCongruent).fill(1);
+            var incongruentSeq = new Array(numTrials - numCongruent).fill(0);
+            var trialSeq = congruentSeq.concat(incongruentSeq)
+                .shuffle().shuffle();
+            var trialArray = [];
+            for (i = 1; i <= numTrials; i++){
+            	trialArray.push(i);
+            }
+            
+            if (!(blocked == 'yes')){
+            	trialArray = trialArray.shuffle();
+            }
+            console.log(trialArray);
+        }
+
+		for (var i = 0; i < numTrials; i++) {
+			
+			var colorsToChoose = colorArray.slice();
+			
+			//what kind of trial?
+			if (trialArray[i] <= numTrials/3){ // neutral
+				condition = 'neutral',
+				whichImage = trialArray[i]%(numTrials/3)%nImages + 1;
+				image = 'Images/' + folder + '/N' + whichImage + ext;
+			} else if (trialArray[i] > numTrials/3 & trialArray[i] <= 2*numTrials/3) { // emotional
+				condition = 'threat',
+				whichImage = trialArray[i]%(numTrials/3)%nImages + 1;
+				image = 'Images/' + folder + '/T' + whichImage + ext;
+			} else if (trialArray[i] > 2*numTrials/3) { // nonword/object
+				condition = 'empty',
+				image = ''
+			}
+			
+			//what color?
+			color = colorsToChoose.random(); //picking any random color for now, should set some restrictions later (perhaps matched to each condition?)
+			
+			//delay time
+			delay_time = fixationTime[Math.floor(Math.random() * fixationTime.length)];
+			
+			frameSequence.push(
+				{
+					type: "test",
+					message: "",
+					word: '',
+					condition: condition,
+					color: color,
+					image: image,
+					delay_time: delay_time,
+					trial_id: trialArray[i]
+				}
+            );
+		}
+        
+        nextTrial();
+    }
+
+
+    function addClassToElement(element,className){
+        var classes = element.className.split(" ");
+        if(!classes.includes(element)){
+            element.className += " "+className;
+        }
+    }
+
+    function analyzeSeed(){
+        var testFrames = frameSequence.slice(13);
+        var congruent = testFrames.filter(function (value) {
+            return value.word === value.color
+        });
+        return "This Seed has " + congruent.length + " congruent trials out of " + testFrames.length;
+    }
+
+    window.onload = function()
+    {
+        // see if they are just asking for help
+        if ((usage = getUrlParameters("help", "", true)))
+        {
+            showAlert("<b>Usage:</b>" +
+                      "<br>Stroop.html?urlparam1=true&urlparam2=false<br><br>" +
+                      "<b>URL Parameters</b>:<br>" +
+                      "<i>seed=1234</i> -- choose a random generator's seed<br>" +
+                      "<i>debug=true</i> -- outputs trial by trial info to the console<br>" +
+                      "<i>showresults=true</i> -- allows to save results locally in a file<br>" +
+                      "<i>autosave=true</i> -- will attempt to save results automatically to file<br>" +
+                      "<i>filename=subject1.csv</i> -- the filename to save results to<br>" +
+                      "<i>help</i> -- print this message");
+            return;
+        }
+
+        // choose a random seed
+        seed = getUrlParameters("seed", "", true);
+        if(!seed) seed = "StroopTaskV1";
+        Math.seedrandom(seed);
+
+        // check if this is a debug session
+        debug = getUrlParameters("debug", "", true);
+
+        // check if they want a demo run
+        demo = getUrlParameters("demo", "", true);
+
+        // check if they want custom
+        var colors = getUrlParameters("colorArray", "", true);
+        if (colors){
+            colorArray = [];
+            if (colors.indexOf("r")!==-1)colorArray.push("red");
+            if (colors.indexOf("o")!==-1)colorArray.push("orange");
+            if (colors.indexOf("y")!==-1)colorArray.push("yellow");
+            if (colors.indexOf("g")!==-1)colorArray.push("green");
+            if (colors.indexOf("b")!==-1)colorArray.push("blue");
+            if (colors.indexOf("p")!==-1)colorArray.push("purple");
+        }
+
+        var words = getUrlParameters("wordArray", "", true);
+        if (words && Array.isArray(words.split("|")))
+            wordsArray = words.split("|");
+
+        var percent = parseInt(getUrlParameters("percentCongruent", "", true));
+        if (percent>=0 && percent<=100 && !(isNaN(percent)))
+            percentCongruent = percent;
+        
+        var wordRepeat = parseInt(getUrlParameters("wordRepeatMax", "", true));
+        if (wordRepeat>=0  && !(isNaN(wordRepeat)))
+            allowRepeatWord = wordRepeat;
+        
+        var colorRepeat = parseInt(getUrlParameters("colorRepeatMax", "", true));
+        if (colorRepeat>=0  && !(isNaN(colorRepeat)))
+            allowRepeatColor = colorRepeat;
+        
+        var perfectRepeat = parseInt(getUrlParameters("perfectRepeatMax", "", true));
+        if (perfectRepeat>=0  && !(isNaN(perfectRepeat)))
+            allowPerfectRepeat = perfectRepeat;
+
+        var numberOfTrials = parseInt(getUrlParameters("numTrials", "", true));
+        if (numberOfTrials>0  && !(isNaN(numberOfTrials)))
+            numTrials = numberOfTrials;
+
+        var onlyRelevant = getUrlParameters("onlyShowRelevant", "", true);
+        if (onlyRelevant)
+            onlyShowRelevant = onlyRelevant;
+            
+        //update image size if scenes
+        if (stroop_version == 'scenes'){
+        	things2change = ['stroopTargetPhoto', 'stroopPhoto', 'colorFilter', 'mainphoto'];
+        	for (i = 0; i < things2change.length; i++){
+        		getID(things2change[i]).style.width = (scene_height*640/480) + 'px';
+    			getID(things2change[i]).style.marginLeft = -1*(scene_height*640/480)/2 + 'px';
+    			getID(things2change[i]).style.height = scene_height + 'px';
+    			getID(things2change[i]).style.marginTop =  -1*scene_height/2 + 'px';
+    		}
+    	}
+        
+
+        // check if they want to load results in a new page when the test is over,
+        // if data is to be saved automatically to a file and the filename
+        showresults = getUrlParameters("showresults", "", true);
+        autosave = getUrlParameters("autosave", "", true);
+        filename = getUrlParameters("filename", "", true);
+
+
+        if(hasTouch || hasPointer)
+        {
+            tmbUI.UIevents = ['taps','clicks'];
+        }
+        else tmbUI.UIevents = ['clicks'];
+
+        tmbUI.UIelements = colorArray;
+        tmbUI.highlight = "";
+
+        testVersion = 'Stroop_Test.v1.Jan20';
+
+        tmbUI.timeout = responseTime;
+
+        //we set up the color buttons in appropriate locations
+
+
+        for(var i=0;i<colorArray.length;i++){
+            var button = getID(colorArray[i]);
+
+
+            //here we assign the appropriate classes to move
+            //the buttons where we want them to be
+            if ((i===2 && colorArray.length===3)||(i===4 && colorArray.length>4)){
+                addClassToElement(button,"bottomButton middleButton")
+            }
+            else if ((i===5 && colorArray.length===6)){
+                addClassToElement(button,"topButton middleButton")
+            }
+            else {
+                if (i < 2)
+                    addClassToElement(button, "bottomButton");
+                else
+                    addClassToElement(button, "topButton");
+
+
+                if (i % 2 === 0)
+                    addClassToElement(button, "leftButton");
+                else
+                    addClassToElement(button, "rightButton");
+            }
+
+
+
+
+        }
+
+
+
+        // disable spurious user interaction
+        disableSelect();
+        disableRightClick();
+        disableDrag();
+        disableDoubleTapZoom();
+
+
+        var images = ["stroop_instructions.png","stroop_task.png", "Images/Faces/whiteframe.png"];
+        for (i == 1; i <= nImages; i++){
+        		images.push('Images/' + folder + '/N' + i + ext);
+        		images.push('Images/' + folder + '/T' + i + ext);
+        }
+        
+        
+        imagePreLoad(images,
+            {callBack:setFrameSequence});
+    }
+
+    </script>
+
+<!-- end of js script ****************************************************** -->
+
+</head>
+
+<!-- HTML content ********************************************************** -->
+
+<body>
+
+    <!-- This div contains the image-->
+    <div style="display: none" id="stroopTarget">WORD</div>
+
+    <!-- this DIV contains the fixation cross -->
+    <div style="display: none" id="fixationCross">+</div>
+    
+    <!-- this DIV contains the photos -->
+    <div id=stroopPhoto>
+		<div id ="stroopTargetPhoto"><img src="Images/Faces/N1.png" id ="mainphoto"></div>
+		<div id ="colorFilter"></div>
+		<div id ="whiteOval"><img id ="oval" src="Images/Faces/whiteframe.png"></div>
+	</div>
+		
+
+    <!-- these DIVs contain the response buttons --------------------------->
+    <div id="responseContainer" style="display: none">
+        <div id="redDiv">
+            <button type="button" id="red" class="responseButton">R</button>
+        </div>
+
+        <div id="orangeDiv">
+            <button type="button" id="orange" class="responseButton">O</button>
+        </div>
+
+        <div id="yellowDiv">
+            <button type="button" id="yellow" class="responseButton">Y</button>
+        </div>
+
+        <div id="greenDiv">
+            <button type="button" id="green" class="responseButton">G</button>
+        </div>
+        <div id="blueDiv">
+            <button type="button" id="blue" class="responseButton">B</button>
+        </div>
+        <div id="purpleDiv">
+            <button type="button" id="purple" class="responseButton">P</button>
+        </div>
+    </div>
+
+    <noscript>
+    For full functionality of this site it is necessary to enable JavaScript.<br>
+    Here are the <a href="http://www.enable-javascript.com/" target="_blank">
+    instructions</a> how to enable JavaScript in your web browser.
+    </noscript>
+</body>
+
+</html>
