@@ -1046,9 +1046,10 @@
         var images = ["stroop_instructions.png","stroop_task.png", "Images/Faces/whiteframe.png"];
         
         if (stroop_version == 'faces' | stroop_version == 'scenes'){
-			for (i == 1; i <= nImages; i++){
+			for (i = 1; i <= nImages; i++){
 					images.push('Images/' + folder + '/N' + i + ext);
 					images.push('Images/' + folder + '/T' + i + ext);
+					console.log(images);
 			}
         }
         
