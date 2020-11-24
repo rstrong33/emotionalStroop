@@ -356,7 +356,7 @@
     var usage = "";                 // URL parameter: show usage
     var iti = getUrlParameters("iti", "", true); //iti fixed or variable?
     if (iti == 'fixed'){
-    	var fixationTime = 1000;   // amount of time in ms fixation cross is shown
+    	var fixationTime = [1000];   // amount of time in ms fixation cross is shown
     } else if (iti == 'variable'){
     	var fixationTime = [700, 900, 1100, 1300, 1500];   // amount of time in ms fixation cross is shown - RS got this from choiceRT
     }
@@ -820,7 +820,6 @@
             if (!(blocked == 'yes')){
             	trialArray = trialArray.shuffle();
             }
-            console.log(trialArray);
         }
 
 		for (var i = 0; i < numTrials; i++) {
