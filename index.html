@@ -339,8 +339,8 @@
 <!-- js script ************************************************************* -->
 
 <script type="text/javascript">
-	var stroop_version = getUrlParameters("stroop_version", "", true); //color, emotional_words, faces, scenes
-	var blocked = getUrlParameters("blocked", "", true); //color, emotional_words, faces, scenes
+	var stroop_version = getUrlParameters("stroop_version", "", true); //color, words, faces, scenes
+	var blocked = getUrlParameters("blocked", "", true);
     var testVersion;                // version identifier for this test
     var frameSequence = [];         // object containing the sequence of frames and their properties
     var frame;                      // single frame object
@@ -363,13 +363,16 @@
     var responseTime = 5000;        // amount of time in ms participant has to respond
     var nFaces = 6;
     var nScenes = 6;
+    var nWords = 6;
     var scene_height = 180;
     
     //wordlist to use
     if (stroop_version == 'color'){
     	var wordsArray = ["red","blue"];
     	var stim_type = 'word';
-    } else if (stroop_version == 'emotional_words'){
+    } else if (stroop_version == 'words'){
+    	var wordsT = ['gun','fight','hatred','intruder','killer','nightmare'];
+    	var wordsN = ['hat','glass','ketchup','knot','lawn','manner'];
     	var wordsArray = ['ankle',
 'appliance',
 'avenue',
@@ -423,6 +426,7 @@
 'weapon', 
 'war'];
 		var stim_type = 'word';
+		nImages = nWords;
     } else if (stroop_version == 'faces'){
     	var stim_type = 'face';
     	var folder = 'Faces';
@@ -828,16 +832,34 @@
 			
 			//what kind of trial?
 			if (trialArray[i] <= numTrials/3){ // neutral
-				condition = 'neutral',
+				condition = 'neutral';
 				whichImage = trialArray[i]%(numTrials/3)%nImages + 1;
-				image = 'Images/' + folder + '/N' + whichImage + ext;
+				if (stroop_version == 'words'){
+					image = '';
+					word = wordsN[whichImage-1];
+				} else {
+					image = 'Images/' + folder + '/N' + whichImage + ext;
+					word = '';
+				}
 			} else if (trialArray[i] > numTrials/3 & trialArray[i] <= 2*numTrials/3) { // emotional
-				condition = 'threat',
+				condition = 'threat';
 				whichImage = trialArray[i]%(numTrials/3)%nImages + 1;
-				image = 'Images/' + folder + '/T' + whichImage + ext;
+				if (stroop_version == 'words'){
+					image = '';
+					word = wordsT[whichImage-1];
+				} else {
+					image = 'Images/' + folder + '/T' + whichImage + ext;
+					word = '';
+				}
 			} else if (trialArray[i] > 2*numTrials/3) { // nonword/object
-				condition = 'empty',
-				image = ''
+				condition = 'empty';
+				if (stroop_version == 'words'){
+					image = '';
+					word = 'XXXXXX';
+				} else {
+					image = '';
+					word = '';
+				}
 			}
 			
 			//what color?
@@ -850,7 +872,7 @@
 				{
 					type: "test",
 					message: "",
-					word: '',
+					word: word,
 					condition: condition,
 					color: color,
 					image: image,
@@ -1022,9 +1044,12 @@
 
 
         var images = ["stroop_instructions.png","stroop_task.png", "Images/Faces/whiteframe.png"];
-        for (i == 1; i <= nImages; i++){
-        		images.push('Images/' + folder + '/N' + i + ext);
-        		images.push('Images/' + folder + '/T' + i + ext);
+        
+        if (stroop_version == 'faces' | stroop_version == 'scenes'){
+			for (i == 1; i <= nImages; i++){
+					images.push('Images/' + folder + '/N' + i + ext);
+					images.push('Images/' + folder + '/T' + i + ext);
+			}
         }
         
         
