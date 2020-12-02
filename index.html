@@ -368,11 +368,11 @@
     var usage = "";                 // URL parameter: show usage
     var iti = getUrlParameters("iti", "", true); //iti fixed or variable?
     var responseTime = 500000;        // amount of time in ms participant has to respond
-    var nFaces = 6;
+    var nFaces = 10;
     var nScenes = 6;
     var nWords = 6;
     var scene_height = 180;
-    var seed_width = 500;
+    var seed_width = 400;
     
         
     //default parameters
@@ -954,9 +954,9 @@
 			getID(divs2change[i]).style.height = seed_width + 'px';
 			
 			if (divs2change[i] == 'colorFilter'){
-				getID(divs2change[i]).style.marginTop =  -1*(seed_width/2 + 80) + 'px';
+				getID(divs2change[i]).style.marginTop =  -1*(seed_width/2 + 60) + 'px';
 			} else {
-				getID(divs2change[i]).style.marginTop =  -1*(seed_width/2 + 40) + 'px';
+				getID(divs2change[i]).style.marginTop =  -1*(seed_width/2 + 30) + 'px';
 			}
 		}
 
@@ -1018,11 +1018,16 @@
         //update image size if scenes
         if (stroop_version == 'scenes'){
         	things2change = ['stroopTargetPhoto', 'stroopPhoto', 'colorFilter', 'mainphoto'];
+        	sceneSizeSeed = 280;
         	for (i = 0; i < things2change.length; i++){
-        		getID(things2change[i]).style.width = (scene_height*640/480) + 'px';
-    			getID(things2change[i]).style.marginLeft = -1*(scene_height*640/480)/2 + 'px';
-    			getID(things2change[i]).style.height = scene_height + 'px';
-    			getID(things2change[i]).style.marginTop =  -1*scene_height/2 + 'px';
+        		getID(things2change[i]).style.width = (sceneSizeSeed*640/480) + 'px';
+    			getID(things2change[i]).style.marginLeft = -1*(sceneSizeSeed*640/480)/2 + 'px';
+    			getID(things2change[i]).style.height = sceneSizeSeed + 'px';
+    			if (things2change[i] == 'colorFilter'){
+    				getID(things2change[i]).style.marginTop =  -1*(sceneSizeSeed/2 + 40) + 'px';
+    			} else {
+    				getID(things2change[i]).style.marginTop =  -1*(sceneSizeSeed/2 + 20) + 'px';
+    			}
     		}
     	}
         
