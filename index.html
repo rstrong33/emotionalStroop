@@ -225,13 +225,14 @@
 
         .bottomButton{
             margin-top:100px;
+            margin-left:-60px;
         }
 
         .rightButton{
-            margin-left:5px;
+            margin-left:70px;
         }
         .leftButton{
-            margin-left:-125px;
+            margin-left:-190px;
         }
 
         #alertButton{
@@ -267,60 +268,72 @@
         
         #stroopTargetPhoto{
             display: block;
-            width: 200px;
-            height: 200px;
+            width: 500px;
+            height: 500px;
             position: absolute;
             left: 50%;
             top: 50%;
             margin-top: -100px;
-            margin-left: -100px;
+            margin-left: -250px;
             display: none;
         }
         
         #whiteOval{
             display: block;
-            width: 200px;
-            height: 200px;
+            width: 500px;
+            height: 500px;
             position: absolute;
             left: 50%;
             top: 50%;
             margin-top: -100px;
-            margin-left: -100px;
+            margin-left: -250px;
             display: none;
         }
         
         #mainphoto{
             display: block;
-            width: 200px;
-            height: 200px;
+            width: 500px;
+            height: 500px;
             position: absolute;
             left: 50%;
             top: 50%;
             margin-top: -100px;
-            margin-left: -100px;
+            margin-left: -250px;
+        }
+        
+        
+        #stroopPhoto{
+            display: block;
+            width: 500px;
+            height: 500px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-top: -250px;
+            margin-left: -250px;
         }
         
         #oval{
             display: block;
-            width: 200px;
-            height: 200px;
+            width: 500px;
+            height: 500px;
             position: absolute;
             left: 50%;
             top: 50%;
-            margin-top: -100px;
-            margin-left: -100px;
+            margin-top: -250px;
+            margin-left: -250px;
         }
         
         #colorFilter{
             display: block;
             opacity: 0.5;
-            width: 200px;
-            height: 200px;
+            width: 500px;
+            height: 500px;
             position: absolute;
             left: 50%;
             top: 50%;
-            margin-top: -100px;
-            margin-left: -100px;
+            margin-top: -250px;
+            margin-left: -250px;
             display: none;
         }
 
@@ -331,8 +344,7 @@
 <!-- end of css Style declarations ***************************************** -->
 
 <!-- required js libraries ************************************************* -->
-
-    <script type="text/javascript" src="TestMyBrain.12.18.min.js"></script>
+<script type="text/javascript" src="TestMyBrain.12.18.min.js"></script>
 
 <!-- end of required js libraries ****************************************** -->
 
@@ -355,16 +367,31 @@
     var filename;                   // URL parameter: filename for data
     var usage = "";                 // URL parameter: show usage
     var iti = getUrlParameters("iti", "", true); //iti fixed or variable?
+    var responseTime = 500000;        // amount of time in ms participant has to respond
+    var nFaces = 6;
+    var nScenes = 6;
+    var nWords = 6;
+    var scene_height = 180;
+    var seed_width = 500;
+    
+        
+    //default parameters
+    if (!stroop_version){
+    	var stroop_version = 'faces';
+    }
+    if (!blocked){
+    	var blocked = 'false';
+    }
+    if (!iti){
+    	var iti = 'fixed';
+    }
+    
+    //fixation options
     if (iti == 'fixed'){
     	var fixationTime = [1000];   // amount of time in ms fixation cross is shown
     } else if (iti == 'variable'){
     	var fixationTime = [700, 900, 1100, 1300, 1500];   // amount of time in ms fixation cross is shown - RS got this from choiceRT
     }
-    var responseTime = 5000;        // amount of time in ms participant has to respond
-    var nFaces = 6;
-    var nScenes = 6;
-    var nWords = 6;
-    var scene_height = 180;
     
     //wordlist to use
     if (stroop_version == 'color'){
@@ -838,7 +865,7 @@
 					image = '';
 					word = wordsN[whichImage-1];
 				} else {
-					image = 'Images/' + folder + '/N' + whichImage + ext;
+					image = 'Images/' + folder + '/N' + whichImage + 'a' + ext;
 					word = '';
 				}
 			} else if (trialArray[i] > numTrials/3 & trialArray[i] <= 2*numTrials/3) { // emotional
@@ -848,7 +875,7 @@
 					image = '';
 					word = wordsT[whichImage-1];
 				} else {
-					image = 'Images/' + folder + '/T' + whichImage + ext;
+					image = 'Images/' + folder + '/A' + whichImage + ext;
 					word = '';
 				}
 			} else if (trialArray[i] > 2*numTrials/3) { // nonword/object
@@ -917,6 +944,21 @@
                       "<i>help</i> -- print this message");
             return;
         }
+        
+        //edit image sizing
+        var divs2change = ['colorFilter', 'oval', 'mainphoto', 'whiteOval', 'stroopTargetPhoto', 'stroopPhoto'];
+		for (i = 0; i < divs2change.length; i++){
+			
+			getID(divs2change[i]).style.width = seed_width + 'px';
+			getID(divs2change[i]).style.marginLeft = -1*seed_width/2 + 'px';
+			getID(divs2change[i]).style.height = seed_width + 'px';
+			
+			if (divs2change[i] == 'colorFilter'){
+				getID(divs2change[i]).style.marginTop =  -1*(seed_width/2 + 100) + 'px';
+			} else {
+				getID(divs2change[i]).style.marginTop =  -1*(seed_width/2 + 50) + 'px';
+			}
+		}
 
         // choose a random seed
         seed = getUrlParameters("seed", "", true);
@@ -931,6 +973,10 @@
 
         // check if they want custom
         var colors = getUrlParameters("colorArray", "", true);
+        if (!colors){
+        	colors = 'ryb';
+        }
+        
         if (colors){
             colorArray = [];
             if (colors.indexOf("r")!==-1)colorArray.push("red");
@@ -1047,8 +1093,8 @@
         
         if (stroop_version == 'faces' | stroop_version == 'scenes'){
 			for (i = 1; i <= nImages; i++){
-					images.push('Images/' + folder + '/N' + i + ext);
-					images.push('Images/' + folder + '/T' + i + ext);
+					images.push('Images/' + folder + '/N' + i + 'a' + ext);
+					images.push('Images/' + folder + '/A' + i + ext);
 					console.log(images);
 			}
         }
