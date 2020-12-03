@@ -100,17 +100,24 @@
             outline: none
         }
 
-        #fixationCross
+		#fixationDiv
         {
             display: none;
-            width: 200px;
-            height: 200px;
+            width: 100px;
+            height: 100px;
             position: absolute;
-            font-size: 100pt;
             left: 50%;
             top: 50%;
-            margin-top: -200px;
-            margin-left: -100px;
+            margin-top: -140px;
+            margin-left: -50px;
+        }
+
+        #fixationCross
+        {
+            width: 100px;
+            height: 100px;
+            left: 50%;
+            top: 50%;
         }
 
         .responseButton
@@ -120,7 +127,6 @@
             font-size: 50pt;
             width: 120px;
             height:120px;
-            margin: 5px;
             padding: 0;
             text-align: center;
             -webkit-border-radius: 50%;
@@ -263,7 +269,6 @@
             top: 50%;
             margin-top: -100px;
             margin-left: -300px;
-            padding: 40px;
         }
         
         #stroopTargetPhoto{
@@ -610,7 +615,7 @@
                     requestAnimationFrame(function()
                     {
                         var divsToShow = colorArray.invoke(function(e){return e+"Div";})
-                            .concat(["responseContainer","fixationCross"]);
+                            .concat(["responseContainer","fixationCross", "fixationDiv"]);
                         showFrame(divsToShow);
                     });
                 },
@@ -1029,6 +1034,7 @@
     				getID(things2change[i]).style.marginTop =  -1*(sceneSizeSeed/2 + 20) + 'px';
     			}
     		}
+    		getID('fixationDiv').style.marginTop = '-110px'
     	}
         
 
@@ -1122,8 +1128,7 @@
     <!-- This div contains the image-->
     <div style="display: none" id="stroopTarget">WORD</div>
 
-    <!-- this DIV contains the fixation cross -->
-    <div style="display: none" id="fixationCross">+</div>
+   
     
     <!-- this DIV contains the photos -->
     <div id=stroopPhoto>
@@ -1157,6 +1162,9 @@
             <button type="button" id="purple" class="responseButton">P</button>
         </div>
     </div>
+    
+     <!-- this DIV contains the fixation cross -->
+    <div id="fixationDiv"><img id ="fixationCross" src="fixation.png"></div>
 
     <noscript>
     For full functionality of this site it is necessary to enable JavaScript.<br>
