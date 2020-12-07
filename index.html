@@ -331,7 +331,7 @@
         
         #colorFilter{
             display: block;
-            opacity: 0.5;
+            opacity: 0.25;
             width: 500px;
             height: 500px;
             position: absolute;
@@ -340,6 +340,20 @@
             margin-top: -250px;
             margin-left: -250px;
             display: none;
+        }
+        
+         #counter
+        {
+            height: 50px;
+            width: 200px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-top: 270px;
+            margin-left: -100px;
+            text-align: center;
+            font-size: 20pt;
+            font-family: Palatino Linotype, Bookman Antiqua, Palatino, serif;
         }
 
 
@@ -374,10 +388,20 @@
     var iti = getUrlParameters("iti", "", true); //iti fixed or variable?
     var responseTime = 500000;        // amount of time in ms participant has to respond
     var nFaces = 10;
-    var nScenes = 6;
+    var nScenes = 16;
     var nWords = 6;
+    var nConds = 3;
     var scene_height = 180;
     var seed_width = 400;
+    var colorVar = [];
+    var blockCount = 0;
+    var block_message = [];
+    
+    //keep track of trial count per trial
+    var condCount = [];
+    for (c = 0; c < nConds; c++){
+    	condCount[c] = 0;
+    }
     
         
     //default parameters
@@ -385,7 +409,7 @@
     	var stroop_version = 'faces';
     }
     if (!blocked){
-    	var blocked = 'false';
+    	var blocked = 'no';
     }
     if (!iti){
     	var iti = 'fixed';
@@ -464,11 +488,37 @@
     	var folder = 'Faces';
     	var nImages = nFaces
     	var ext = '.png';
+    	var threatLetter = 'A';
+    	if (blocked == 'yes'){
+    		block_message[0] = "Round 1/3<br><br>For this round, you will see a series of faces. Press the button that matches the COLOR of each face.<br>R=RED, B=BLUE, Y=YELLOW";
+    		block_message[1] = "Round 2/3<br><br>For this round, you will again see a series of faces. Press the button that matches the COLOR of each face.<br>R=RED, B=BLUE, Y=YELLOW";
+    		block_message[2] = "Round 3/3<br><br>For this round, you will see a series of ovals. Press the button that matches the COLOR of each oval.<br>R=RED, B=BLUE, Y=YELLOW";
+    	} else {
+    		block_message[0] = "Round 1/3<br><br>For this round, you will see a series of faces and ovals. Press the button that matches the COLOR of each face or oval.<br>R=RED, B=BLUE, Y=YELLOW";
+    		block_message[1] = "Round 2/3<br><br>For this round, you will again see a series of faces and ovals. Press the button that matches the COLOR of each face or oval.<br>R=RED, B=BLUE, Y=YELLOW";
+    		block_message[2] = "Round 3/3<br><br>For this round, you will again see a series of faces and ovals. Press the button that matches the COLOR of each face or oval.<br>R=RED, B=BLUE, Y=YELLOW";
+    	}
     } else if (stroop_version == 'scenes'){
     	var folder = 'Scenes';
     	var stim_type = 'picture';
     	nImages = nScenes;
-    	var ext = '.png';
+    	var ext = '.jpg';
+    	var threatLetter = 'A';
+    	if (blocked == 'yes'){
+    		block_message[0] = "Round 1/3<br><br>For this round, you will see a series of images. Press the button that matches the COLOR of each image.<br>R=RED, B=BLUE, Y=YELLOW";
+    		block_message[1] = "Round 2/3<br><br>For this round, you will again see a series of images. Press the button that matches the COLOR of each image.<br>R=RED, B=BLUE, Y=YELLOW";
+    		block_message[2] = "Round 3/3<br><br>For this round, you will see a series of rectangles. Press the button that matches the COLOR of each rectangle.<br>R=RED, B=BLUE, Y=YELLOW";
+    	} else {
+    		block_message[0] = "Round 1/3<br><br>For this round, you will see a series of images and rectangles. Press the button that matches the COLOR of each image or rectangle.<br>R=RED, B=BLUE, Y=YELLOW";
+    		block_message[1] = "Round 2/3<br><br>For this round, you will again see a series of images and rectangles. Press the button that matches the COLOR of each image or rectangle.<br>R=RED, B=BLUE, Y=YELLOW";
+    		block_message[2] = "Round 3/3<br><br>For this round, you will again see a series of images and rectangles. Press the button that matches the COLOR of each image or rectangle.<br>R=RED, B=BLUE, Y=YELLOW";
+    	}
+    } else if (stroop_version == 'snakes'){
+    	var folder = 'Scenes';
+    	var stim_type = 'picture';
+    	nImages = nScenes;
+    	var ext = '.jpg';
+    	var threatLetter = 'S';
     }
     var colorArray =
         ["red","blue"];          //colors to use
@@ -566,8 +616,7 @@
 
 
 
-    function nextTrial()
-    {
+    function nextTrial(){
         // read the frame sequence one frame at a time
         frame = frameSequence.shift();
         if(frame)
@@ -599,13 +648,15 @@
 
 
                 // chain the stimulus presentation
+                getID("counter").innerHTML = "<b>" + frame.count + " of " + numTrials + "</b>";
+                
                 ch = chainTimeouts(
                     function()
                     {
                         requestAnimationFrame(function()
                         {
                             var divsToShow = colorArray.invoke(function(e){return e+"Div";})
-                                .concat(["responseContainer"]);
+                                .concat(["responseContainer", "counter"]);
                             showFrame(divsToShow);
                         });
                     },
@@ -615,7 +666,7 @@
                     requestAnimationFrame(function()
                     {
                         var divsToShow = colorArray.invoke(function(e){return e+"Div";})
-                            .concat(["responseContainer","fixationCross", "fixationDiv"]);
+                            .concat(["responseContainer","fixationCross", "fixationDiv", "counter"]);
                         showFrame(divsToShow);
                     });
                 },
@@ -628,17 +679,17 @@
                         	getID("mainphoto").src = frame.image;
                         	getID("colorFilter").style.background = frame.color;
                         	var divsToShow = colorArray.invoke(function(e){return e+"Div";})
-                        	.concat(["responseContainer","stroopPhoto","stroopTargetPhoto", "colorFilter", "whiteOval"]); 
-                        } else if (stroop_version == 'scenes'){
+                        	.concat(["responseContainer","stroopPhoto","stroopTargetPhoto", "colorFilter", "whiteOval", "counter"]); 
+                        } else if (stroop_version == 'scenes' | stroop_version == 'snakes'){
                         	getID("mainphoto").src = frame.image;
                         	getID("colorFilter").style.background = frame.color;
                         	var divsToShow = colorArray.invoke(function(e){return e+"Div";})
-                        	.concat(["responseContainer","stroopPhoto","stroopTargetPhoto", "colorFilter"]);                        	
+                        	.concat(["responseContainer","stroopPhoto","stroopTargetPhoto", "colorFilter", "counter"]);                        	
                         } else {
                         	getID("stroopTarget").innerHTML = frame.word.toUpperCase();
                         	getID("stroopTarget").style.color = frame.color;
                         	var divsToShow = colorArray.invoke(function(e){return e+"Div";})
-                        	.concat(["responseContainer","stroopTarget"]);
+                        	.concat(["responseContainer","stroopTarget", "counter"]);
                         }
                         showFrame(divsToShow);
                         tmbUI.getInput();
@@ -768,8 +819,7 @@
         }
     }
 
-    function setFrameSequence()
-    {
+    function setFrameSequence(){
 
 		
         var testMessage;
@@ -865,6 +915,7 @@
 			//what kind of trial?
 			if (trialArray[i] <= numTrials/3){ // neutral
 				condition = 'neutral';
+				condNumber = 0;
 				whichImage = trialArray[i]%(numTrials/3)%nImages + 1;
 				if (stroop_version == 'words'){
 					image = '';
@@ -875,15 +926,17 @@
 				}
 			} else if (trialArray[i] > numTrials/3 & trialArray[i] <= 2*numTrials/3) { // emotional
 				condition = 'threat';
+				condNumber = 1;
 				whichImage = trialArray[i]%(numTrials/3)%nImages + 1;
 				if (stroop_version == 'words'){
 					image = '';
 					word = wordsT[whichImage-1];
 				} else {
-					image = 'Images/' + folder + '/A' + whichImage + ext;
+					image = 'Images/' + folder + '/' + threatLetter + whichImage + ext;
 					word = '';
 				}
 			} else if (trialArray[i] > 2*numTrials/3) { // nonword/object
+				condNumber = 2;
 				condition = 'empty';
 				if (stroop_version == 'words'){
 					image = '';
@@ -895,10 +948,29 @@
 			}
 			
 			//what color?
-			color = colorsToChoose.random(); //picking any random color for now, should set some restrictions later (perhaps matched to each condition?)
+			color = colorVar[condNumber][condCount[condNumber]];
+			
+			//increase count for this trial type;
+			condCount[condNumber] = condCount[condNumber] + 1;
 			
 			//delay time
 			delay_time = fixationTime[Math.floor(Math.random() * fixationTime.length)];
+			
+			if (i%(numTrials/nConds) == 0){
+				frameSequence.push({
+					type: "message",
+					message: block_message[blockCount],
+					word: '',
+					condition: '',
+					color: '',
+					image: '',
+					delay_time: '',
+					trial_id: ''
+				}
+				);
+				blockCount++;
+			}
+
 			
 			frameSequence.push(
 				{
@@ -909,7 +981,8 @@
 					color: color,
 					image: image,
 					delay_time: delay_time,
-					trial_id: trialArray[i]
+					trial_id: trialArray[i],
+					count: i + 1
 				}
             );
 		}
@@ -991,6 +1064,16 @@
             if (colors.indexOf("b")!==-1)colorArray.push("blue");
             if (colors.indexOf("p")!==-1)colorArray.push("purple");
         }
+        
+        //create color array for main trials
+        var numColors = colorArray.length;
+        for (cond = 0; cond < nConds; cond++){
+        	colorVar[cond] = [];
+        	for (t = 0; t < numTrials/nConds; t++){
+        		colorVar[cond].push(colorArray[t%nConds])
+        	}
+        	colorVar[cond].shuffle();
+        }
 
         var words = getUrlParameters("wordArray", "", true);
         if (words && Array.isArray(words.split("|")))
@@ -1021,7 +1104,7 @@
             onlyShowRelevant = onlyRelevant;
             
         //update image size if scenes
-        if (stroop_version == 'scenes'){
+        if (stroop_version == 'scenes' | stroop_version == 'snakes'){
         	things2change = ['stroopTargetPhoto', 'stroopPhoto', 'colorFilter', 'mainphoto'];
         	sceneSizeSeed = 280;
         	for (i = 0; i < things2change.length; i++){
@@ -1035,6 +1118,8 @@
     			}
     		}
     		getID('fixationDiv').style.marginTop = '-110px'
+    	} else if (stroop_version == 'words'){
+    		getID('fixationDiv').style.marginTop = '-102px'
     	}
         
 
@@ -1100,13 +1185,12 @@
         disableDoubleTapZoom();
 
 
-        var images = ["stroop_instructions.png","stroop_task.png", "Images/Faces/whiteframe.png"];
+        var images = ['fixation.png', "stroop_instructions.png","stroop_task.png", "Images/Faces/whiteframe.png"];
         
-        if (stroop_version == 'faces' | stroop_version == 'scenes'){
+        if (stroop_version == 'faces' | stroop_version == 'scenes' | stroop_version == 'snakes'){
 			for (i = 1; i <= nImages; i++){
 					images.push('Images/' + folder + '/N' + i + 'a' + ext);
-					images.push('Images/' + folder + '/A' + i + ext);
-					console.log(images);
+					images.push('Images/' + folder + '/' + threatLetter + i + ext);
 			}
         }
         
@@ -1165,6 +1249,8 @@
     
      <!-- this DIV contains the fixation cross -->
     <div id="fixationDiv"><img id ="fixationCross" src="fixation.png"></div>
+
+	<div id="counter"></div>
 
     <noscript>
     For full functionality of this site it is necessary to enable JavaScript.<br>
