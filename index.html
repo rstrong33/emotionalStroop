@@ -264,7 +264,7 @@
             height: 200px;
             position: absolute;
             text-align: center;
-            font-size: 80px;
+            font-size: 60px;
             left: 50%;
             top: 50%;
             margin-top: -100px;
@@ -388,8 +388,8 @@
     var iti = getUrlParameters("iti", "", true); //iti fixed or variable?
     var responseTime = 500000;        // amount of time in ms participant has to respond
     var nFaces = 10;
-    var nScenes = 16;
-    var nWords = 6;
+    var nScenes = 18;
+    var nWords = 18;
     var nConds = 3;
     var scene_height = 180;
     var seed_width = 400;
@@ -424,65 +424,31 @@
     
     //wordlist to use
     if (stroop_version == 'color'){
-    	var wordsArray = ["red","blue"];
+    	var wordsArray = ["red", 'blue', 'yellow'];
     	var stim_type = 'word';
+    	if (blocked == 'yes'){
+    		block_message[0] = "Round 1/3<br><br>For this round, you will see a series of color words.<br><br>Press the button that matches the COLOR of the TEXT, not what the word itself says.<br><br>R=RED, B=BLUE, Y=YELLOW";
+    		block_message[1] = "Round 2/3<br><br>For this round, you will again see a series of color words.<br><br>Press the button that matches the COLOR of the TEXT, not what the word itself says.<br><br>R=RED, B=BLUE, Y=YELLOW";
+    		block_message[2] = "Round 3/3<br><br>For this round, you will see text that looks like: XXXXXX<br><br>Press the button that matches the COLOR of the text.<br><br>R=RED, B=BLUE, Y=YELLOW";
+    	} else {
+    		block_message[0] = "Round 1/3<br><br>For this round, you will see a series of color words and letters.<br><br>Press the button that matches the COLOR of the TEXT, not what the word itself says.<br><br>R=RED, B=BLUE, Y=YELLOW";
+    		block_message[1] = "Round 2/3<br><br>For this round, you will again see a series of words and letters.<br><br>Press the button that matches the COLOR of the TEXT, not what the word itself says.<br><br>R=RED, B=BLUE, Y=YELLOW";
+    		block_message[2] = "Round 3/3<br><br>For this round, you will again see a series of words and letters.<br><br>Press the button that matches the COLOR of the TEXT, not what the word itself says.<br><br>R=RED, B=BLUE, Y=YELLOW";
+    	}
     } else if (stroop_version == 'words'){
-    	var wordsT = ['gun','fight','hatred','intruder','killer','nightmare'];
-    	var wordsN = ['hat','glass','ketchup','knot','lawn','manner'];
-    	var wordsArray = ['ankle',
-'appliance',
-'avenue',
-'book',
-'clock',
-'custom',
-'detail',
-'fabric',
-'detail',
-'hammer',
-'hat',
-'glass',
-'ketchup',
-'knot',
-'lawn',
-'manner',
-'month', 
-'muddy',
-'patient',
-'passage',
-'office',
-'journal',
-'nonsense',
-'sentiment',
-'theory',
-'writer',
-'agony',
-'afraid',
-'assault',
-'bomb',
-'burn',
-'danger',
-'disaster',
-'enraged',
-'gun',
-'fight',
-'hatred',
-'intruder',
-'killer',
-'nightmare',
-'venom',
-'pain', 
-'riot',
-'scared',
-'scream',
-'slaughter',
-'terrified',
-'torture',
-'trauma',
-'violent',
-'weapon', 
-'war'];
+    	var wordsT = ['scared','pain','killer','scream','slaughter','torture','trauma','violent','weapon','disaster','agony','assault','bomb','danger','afraid','fight','hatred','gun'];
+    	var wordsN = ['knot','lawn','hat','muddy','nonsense','passage','patient','sentiment','avenue','clock','custom','fabric','glass','detail','appliance','hammer','ketchup','month'];
 		var stim_type = 'word';
 		nImages = nWords;
+		if (blocked == 'yes'){
+    		block_message[0] = "Round 1/3<br><br>For this round, you will see a series of words.<br><br>Press the button that matches the COLOR of the text.<br><br>R=RED, B=BLUE, Y=YELLOW";
+    		block_message[1] = "Round 2/3<br><br>For this round, you will again see a series of words.<br><br>Press the button that matches the COLOR of the text.<br><br>R=RED, B=BLUE, Y=YELLOW";
+    		block_message[2] = "Round 3/3<br><br>For this round, you will see text that looks like: XXXXXX<br><br>Press the button that matches the COLOR of the text.<br><br>R=RED, B=BLUE, Y=YELLOW";
+    	} else {
+    		block_message[0] = "Round 1/3<br><br>For this round, you will see a series of words and letters.<br><br>Press the button that matches the COLOR of the text.<br><br>R=RED, B=BLUE, Y=YELLOW";
+    		block_message[1] = "Round 2/3<br><br>For this round, you will again see a series of words and letters.<br><br>Press the button that matches the COLOR of the text.<br><br>R=RED, B=BLUE, Y=YELLOW";
+    		block_message[2] = "Round 3/3<br><br>For this round, you will again see a series of words and letters.<br><br>Press the button that matches the COLOR of the text.<br><br>R=RED, B=BLUE, Y=YELLOW";
+    	}
     } else if (stroop_version == 'faces'){
     	var stim_type = 'face';
     	var folder = 'Faces';
@@ -519,12 +485,21 @@
     	nImages = nScenes;
     	var ext = '.jpg';
     	var threatLetter = 'S';
+    	if (blocked == 'yes'){
+    		block_message[0] = "Round 1/3<br><br>For this round, you will see a series of images.<br><br>Press the button that matches the COLOR of each image.<br><br>R=RED, B=BLUE, Y=YELLOW";
+    		block_message[1] = "Round 2/3<br><br>For this round, you will again see a series of images.<br><br>Press the button that matches the COLOR of each image.<br><br>R=RED, B=BLUE, Y=YELLOW";
+    		block_message[2] = "Round 3/3<br><br>For this round, you will see a series of rectangles.<br><br>Press the button that matches the COLOR of each rectangle.<br><br>R=RED, B=BLUE, Y=YELLOW";
+    	} else {
+    		block_message[0] = "Round 1/3<br><br>For this round, you will see a series of images and rectangles.<br><br>Press the button that matches the COLOR of each image or rectangle.<br><br>R=RED, B=BLUE, Y=YELLOW";
+    		block_message[1] = "Round 2/3<br><br>For this round, you will again see a series of images and rectangles.<br><br>Press the button that matches the COLOR of each image or rectangle.<br><br>R=RED, B=BLUE, Y=YELLOW";
+    		block_message[2] = "Round 3/3<br><br>For this round, you will again see a series of images and rectangles.<br><br>Press the button that matches the COLOR of each image or rectangle.<br><br>R=RED, B=BLUE, Y=YELLOW";
+    	}
     }
     var colorArray =
         ["red","blue"];          //colors to use
     var supportedColors =
         ["purple","red","yellow","blue","green","orange"];    //colors supported by this version of the Stroop Task
-    var numTrials = 48;             //number of trials
+    var numTrials = 54;             //number of trials
     var percentCongruent = 50;      //percentage of trials that should be congruent - set to 0 if not using rgby
     var allowRepeatWord = 3;        //number of times words can repeat (set to 0 for no repeats)
     var allowRepeatColor = 3;       //number of times colors can repeat (set to 0 for no repeats)
@@ -551,7 +526,7 @@
         results.push(
             {
                 type: frame.type, // one of practice or test
-                wordColor:frame.color, //color of word
+                stimColor:frame.color, //color of word
                 wordText:frame.word, //word shown,
                 image:frame.image, //image shown
                 condition: frame.condition, //threat, neutral, or empty
@@ -586,10 +561,18 @@
                 '20pt');
         }
         else if (frame.type==="practice" && !correct){
-
-            var alertMessage = "Incorrect.<br><br>" +
-                "The word was colored <b style = 'color:"+frame.color+"'>" +frame.color+ "</b>. <br>" +
-                "You should have pressed the <b style = 'color:"+frame.color+"'>" +frame.color+ "</b> button<br><br>";
+			
+			if (stroop_version == 'words' | stroop_version == 'color'){
+			
+				var alertMessage = "Incorrect.<br><br>" +
+					"The word was colored <b style = 'color:"+frame.color+"'>" +frame.color+ "</b>. <br>" +
+					"You should have pressed the " + frame.color.substr(0,1).toUpperCase() + " button for <b style = 'color:"+frame.color+"'>" +frame.color+ "</b><br><br>";
+            } else {
+            	var alertMessage = "Incorrect.<br><br>" +
+					"The image was colored <b style = 'color:"+frame.color+"'>" +frame.color+ "</b>. <br>" +
+					"You should have pressed the " + frame.color.substr(0,1).toUpperCase() + " button for <b style = 'color:"+frame.color+"'>" +frame.color+ "</b><br><br>";
+            }
+                
             showAlert(alertMessage,
                 "Click here to retry",
                 function()
@@ -629,9 +612,7 @@
                         nextTrial();
                     },
                     '20pt');
-            }
-            // else if it's a message frame, show it
-            else if (frame.type === "message") {
+            } else if (frame.type === "message") { // else if it's a message frame, show it
                 showAlert(frame.message,
                 "Click to continue",
                 function ()
@@ -640,15 +621,13 @@
                    nextTrial();
                 },
                 '20pt');
-            }
-            // deal with practice and test frames
-            else
-            {
-
-
-
+            }else{// deal with practice and test frames
                 // chain the stimulus presentation
-                getID("counter").innerHTML = "<b>" + frame.count + " of " + numTrials + "</b>";
+                if (frame.type != 'practice'){
+                	getID("counter").innerHTML = "<b>" + frame.count + " of " + numTrials/3 + "</b>";
+                } else {
+                	getID("counter").innerHTML = "";
+                }
                 
                 ch = chainTimeouts(
                     function()
@@ -882,55 +861,100 @@
         //now that we have completed the practice
         //let's build the test trials
 
-        var previousWord ="";
+        /*var previousWord ="";
         var previousColor = "";
         var wordRepeats = 0;
         var colorRepeats = 0;
-        var perfectRepeats = 0;
+        var perfectRepeats = 0;*/
 
 
-        if((percentCongruent>0 && percentCongruent<=100))
-        {
-            // create a shuffled array of congruence categories
-            // with defined marginal probabilities
-            var numCongruent = Math.floor((percentCongruent / 100) * numTrials);
-            var congruentSeq = new Array(numCongruent).fill(1);
-            var incongruentSeq = new Array(numTrials - numCongruent).fill(0);
-            var trialSeq = congruentSeq.concat(incongruentSeq)
-                .shuffle().shuffle();
-            var trialArray = [];
-            for (i = 1; i <= numTrials; i++){
-            	trialArray.push(i);
-            }
-            
-            if (!(blocked == 'yes')){
-            	trialArray = trialArray.shuffle();
-            }
-        }
+		//create practice trials
+		
+		var nTrialsPractice = 6;
+		condition = ['neutral', 'neutral', 'empty', 'neutral', 'neutral', 'empty'];
+		color = ['blue', 'red', 'yellow', 'red', 'yellow', 'blue'];
+		if (stroop_version == 'words'){
+			image = ['','','','','',''];
+			word = ['writer','office','XXXXXX','theory','book','XXXXXX']; 
+		} else if (stroop_version == 'color') {
+			condition = ['congruent', 'incongruent', 'empty', 'incongruent', 'congruent', 'empty'];
+			image = ['','','','','',''];
+			word = ['blue','yellow','XXXXXX','blue','yellow','XXXXXX'];
+		} else {
+			image = [];
+			word = [];
+			for (p=1; p<=nTrialsPractice; p++){
+				if (condition[p-1] == 'empty'){
+					image[p-1] = '';
+				} else {
+					word[p-1] = '';
+					image[p-1] = 'Images/' + folder + '/N' + p + 'b' + ext;
+				}
+			}
+		}
+		
+		for (p = 0; p < nTrialsPractice; p++){
+			frameSequence.push(
+				{
+					type: "practice",
+					message: "",
+					word: word[p],
+					condition: condition[p],
+					color: color[p],
+					image: image[p],
+					delay_time: fixationTime[Math.floor(Math.random() * fixationTime.length)],
+					trial_id: 0,
+					count: 0
+				}
+            );
+		}
+		
+
+    	//create trial array
+		var trialArray = [];
+		for (i = 1; i <= numTrials; i++){
+			trialArray.push(i);
+		}
+		
+		//shuffle trial array if not blocked
+		if (!(blocked == 'yes')){
+			trialArray = trialArray.shuffle();
+		}
+
 
 		for (var i = 0; i < numTrials; i++) {
 			
-			var colorsToChoose = colorArray.slice();
-			
 			//what kind of trial?
-			if (trialArray[i] <= numTrials/3){ // neutral
+			if (trialArray[i] <= numTrials/3){ // neutral (congruent for color stroop)
 				condition = 'neutral';
 				condNumber = 0;
 				whichImage = trialArray[i]%(numTrials/3)%nImages + 1;
+				color = colorVar[condNumber][condCount[condNumber]];
 				if (stroop_version == 'words'){
 					image = '';
 					word = wordsN[whichImage-1];
+				} else if (stroop_version == 'color') {
+					condition = 'congruent'
+					image = '';
+					word = color;
 				} else {
 					image = 'Images/' + folder + '/N' + whichImage + 'a' + ext;
 					word = '';
 				}
-			} else if (trialArray[i] > numTrials/3 & trialArray[i] <= 2*numTrials/3) { // emotional
+			} else if (trialArray[i] > numTrials/3 & trialArray[i] <= 2*numTrials/3) { // emotional (incongruent for color stroop)
 				condition = 'threat';
 				condNumber = 1;
 				whichImage = trialArray[i]%(numTrials/3)%nImages + 1;
+				color = colorVar[condNumber][condCount[condNumber]];
 				if (stroop_version == 'words'){
 					image = '';
 					word = wordsT[whichImage-1];
+				} else if (stroop_version == 'color') {
+					condition = 'incongruent'
+					image = '';
+					var this_color = [color];
+					var word_options = wordsArray.filter(x => !this_color.includes(x));
+					word = word_options[trialArray[i]%2];
 				} else {
 					image = 'Images/' + folder + '/' + threatLetter + whichImage + ext;
 					word = '';
@@ -938,7 +962,8 @@
 			} else if (trialArray[i] > 2*numTrials/3) { // nonword/object
 				condNumber = 2;
 				condition = 'empty';
-				if (stroop_version == 'words'){
+				color = colorVar[condNumber][condCount[condNumber]];
+				if (stroop_version == 'words' | stroop_version == 'color'){
 					image = '';
 					word = 'XXXXXX';
 				} else {
@@ -947,8 +972,7 @@
 				}
 			}
 			
-			//what color?
-			color = colorVar[condNumber][condCount[condNumber]];
+			
 			
 			//increase count for this trial type;
 			condCount[condNumber] = condCount[condNumber] + 1;
@@ -1118,8 +1142,8 @@
     			}
     		}
     		getID('fixationDiv').style.marginTop = '-110px'
-    	} else if (stroop_version == 'words'){
-    		getID('fixationDiv').style.marginTop = '-102px'
+    	} else if (stroop_version == 'words' | stroop_version == 'color'){
+    		getID('fixationDiv').style.marginTop = '-110px'
     	}
         
 
@@ -1192,6 +1216,10 @@
 					images.push('Images/' + folder + '/N' + i + 'a' + ext);
 					images.push('Images/' + folder + '/' + threatLetter + i + ext);
 			}
+			//practice images
+			for (i = 1; i <= 6; i++){
+				images.push('Images/' + folder + '/N' + i + 'b' + ext);
+			}
         }
         
         
@@ -1216,7 +1244,7 @@
     
     <!-- this DIV contains the photos -->
     <div id=stroopPhoto>
-		<div id ="stroopTargetPhoto"><img src="Images/Faces/N1.png" id ="mainphoto"></div>
+		<div id ="stroopTargetPhoto"><img src="Images/Faces/N1a.png" id ="mainphoto"></div>
 		<div id ="colorFilter"></div>
 		<div id ="whiteOval"><img id ="oval" src="Images/Faces/whiteframe.png"></div>
 	</div>
