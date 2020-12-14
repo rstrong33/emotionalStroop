@@ -342,8 +342,7 @@
             display: none;
         }
         
-         #counter
-        {
+         #counter{
             height: 50px;
             width: 200px;
             position: absolute;
@@ -354,6 +353,38 @@
             text-align: center;
             font-size: 20pt;
             font-family: Palatino Linotype, Bookman Antiqua, Palatino, serif;
+        }
+        
+        #demoText{
+            height: 50px;
+            width: 300px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-top: -320px;
+            margin-left: -150px;
+            text-align: center;
+            font-size: 12pt;
+            font-family: Palatino Linotype, Bookman Antiqua, Palatino, serif;
+        }
+        
+        #demoButton{
+            height: 75px;
+            width: 300px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-top: 220px;
+            margin-left: -150px;
+        }
+        
+        #continueButton{
+            height: 75px;
+            width: 300px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-left: -150px;
         }
 
 
@@ -386,7 +417,7 @@
     var filename;                   // URL parameter: filename for data
     var usage = "";                 // URL parameter: show usage
     var iti = getUrlParameters("iti", "", true); //iti fixed or variable?
-    var responseTime = 5000;        // amount of time in ms participant has to respond
+    var responseTime = 500000;        // amount of time in ms participant has to respond
     var nFaces = 10;
     var nScenes = 18;
     var nWords = 18;
@@ -612,6 +643,31 @@
                         nextTrial();
                     },
                     '20pt');
+            } else if (frame.type === "demo"){
+            	getID("demoText").innerHTML = frame.message;
+            	if (stroop_version == 'faces'){
+					getID("mainphoto").src = frame.image;
+					getID("colorFilter").style.background = frame.color;
+					var divsToShow = colorArray.invoke(function(e){return e+"Div";})
+					.concat(["responseContainer","stroopPhoto","stroopTargetPhoto", "colorFilter", "whiteOval", "demoText", "demoButton", "continueButton"]); 
+				} else if (stroop_version == 'scenes' | stroop_version == 'snakes'){
+					getID("mainphoto").src = frame.image;
+					getID("colorFilter").style.background = frame.color;
+					var divsToShow = colorArray.invoke(function(e){return e+"Div";})
+					.concat(["responseContainer","stroopPhoto","stroopTargetPhoto", "colorFilter", "demoText", "demoButton", "continueButton"]);                        	
+				} else {
+					getID("stroopTarget").innerHTML = frame.word.toUpperCase();
+					getID("stroopTarget").style.color = frame.color;
+					var divsToShow = colorArray.invoke(function(e){return e+"Div";})
+					.concat(["responseContainer","stroopTarget", "demoText", "demoButton", "continueButton"]);
+				}
+				showFrame(divsToShow);
+				/*showAlert(frame.message,
+                	"Click to continue",
+                	function (){
+                   		showFrame("null");
+                   		nextTrial();
+                	},'20pt');*/
             } else if (frame.type === "message") { // else if it's a message frame, show it
                 showAlert(frame.message,
                 "Click to continue",
@@ -857,19 +913,69 @@
                 });
         }*/
 
+		frameSequence.push(
+            {
+                type: 'begin',
+                message:"<h3>Color Naming Test</h3><img style='max-width:400px;margin-top: -35px;'" +
+                            " src='Images/Faces/N1b.png'><br><br>",
+                word:'',
+                color:'red',
+                image: 'Images/Faces/N1b.png'
+        });
+        
+        
+        //create demonstration trials
+        var demoColors = ['red', 'red', 'red', 'red', 'blue', ''];
+        if (stroop_version == 'faces'){
+			var messageArray = ["On each trial, you will see a face or oval.",
+				"Your task is to select the color of the face or oval as quickly as possible.",
+				"You will select the color using the buttons below, where:<BR>R = RED, B = BLUE, and Y = YELLOW",
+				"For example, on this trial you would hit the R button, since the face is RED.",
+				"On this trial, you would hit the B button, since the oval is blue.",
+				"Remember to always click the button corresponding to the color of the face or oval.<BR><BR>Please do this as quickly as possible while remaining accurate.<BR><BR>Please click below to begin practice trials."];
+			var demoImages = ['Images/Faces/N1b.png', 'Images/Faces/N1b.png', 'Images/Faces/N1b.png', 'Images/Faces/N1b.png', '', ''];
+			var demoWords = ['', '', '', '', '', ''];
+        } else if (stroop_version == 'scenes' | stroop_version == 'snakes'){
+        	var messageArray = ["On each trial, you will see an image or rectangle.",
+				"Your task is to select the color of the image or rectangle as quickly as possible.",
+				"You will select the color using the buttons below, where:<BR>R = RED, B = BLUE, and Y = YELLOW",
+				"For example, on this trial you would hit the R button, since the image is RED.",
+				"On this trial, you would hit the B button, since the rectangle is blue.",
+				"Remember to always click the button corresponding to the color of the image or rectangle.<BR><BR>Please do this as quickly as possible while remaining accurate.<BR><BR>Please click below to begin practice trials."];
+			var demoImages = ['Images/Scenes/N1b.jpg', 'Images/Scenes/N1b.jpg', 'Images/Scenes/N1b.jpg', 'Images/Scenes/N1b.jpg', '', ''];
+			var demoWords = ['', '', '', '', '', ''];
+        } else if (stroop_version == 'words'){
+        	var messageArray = ["On each trial, you will see a word or letters displayed in colored text.",
+				"Your task is to select the color of the text as quickly as possible.",
+				"You will select the color using the buttons below, where:<BR>R = RED, B = BLUE, and Y = YELLOW",
+				"For example, on this trial you would hit the R button, since the text is colored RED.",
+				"On this trial, you would hit the B button, since the text is colored blue.",
+				"Remember to always click the button corresponding to the color of the text, regardless of what the word says.<BR><BR>Please do this as quickly as possible while remaining accurate.<BR><BR>Please click below to begin practice trials."];
+			var demoImages = ['', '', '', '', '', ''];
+			var demoWords = ['science', 'science', 'science', 'science', 'XXXXXX', ''];
+        } else if (stroop_version == 'color'){
+        	var messageArray = ["On each trial, you will see a word or letters displayed in colored text.",
+				"Your task is to select the color of the text as quickly as possible.",
+				"You will select the color using the buttons below, where:<BR>R = RED, B = BLUE, and Y = YELLOW",
+				"For example, on this trial you would hit the R button, since the text is colored RED.",
+				"On this trial, you would hit the B button, since the text is colored blue.",
+				"Remember to always click the button corresponding to the color of the text, regardless of what the word says.<BR><BR>Please do this as quickly as possible while remaining accurate.<BR><BR>Please click below to begin practice trials."];
+			var demoImages = ['', '', '', '', '', ''];
+			var demoWords = ['XXXXXX', 'XXXXXX', 'XXXXXX', 'XXXXXX', 'yellow', ''];
+		}
+        for(var i = 0; i < messageArray.length; i++){
+			frameSequence.push(
+				{
+					type: 'demo',
+					message: messageArray[i],
+					word:demoWords[i],
+					color: demoColors[i],
+					image: demoImages[i]
+			});
+        }
 
-        //now that we have completed the practice
-        //let's build the test trials
 
-        /*var previousWord ="";
-        var previousColor = "";
-        var wordRepeats = 0;
-        var colorRepeats = 0;
-        var perfectRepeats = 0;*/
-
-
-		//create practice trials
-		
+		//create practice trials		
 		var nTrialsPractice = 6;
 		condition = ['neutral', 'neutral', 'empty', 'neutral', 'neutral', 'empty'];
 		color = ['blue', 'red', 'yellow', 'red', 'yellow', 'blue'];
@@ -910,7 +1016,7 @@
 		}
 		
 
-    	//create trial array
+    	//create test trials
 		var trialArray = [];
 		for (i = 1; i <= numTrials; i++){
 			trialArray.push(i);
@@ -1240,7 +1346,6 @@
     <!-- This div contains the image-->
     <div style="display: none" id="stroopTarget">WORD</div>
 
-   
     
     <!-- this DIV contains the photos -->
     <div id=stroopPhoto>
@@ -1248,6 +1353,9 @@
 		<div id ="colorFilter"></div>
 		<div id ="whiteOval"><img id ="oval" src="Images/Faces/whiteframe.png"></div>
 	</div>
+	
+	<div id="demoText">Demo Text</div>
+	<div id="demoButton" onclick='showFrame("null"); nextTrial()'><img id ="continueButton" src="continue.png"></div>
 		
 
     <!-- these DIVs contain the response buttons --------------------------->
