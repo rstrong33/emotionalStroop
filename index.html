@@ -331,7 +331,7 @@
         
         #colorFilter{
             display: block;
-            opacity: 0.25;
+            opacity: 0.33;
             width: 500px;
             height: 500px;
             position: absolute;
@@ -427,6 +427,11 @@
     var colorVar = [];
     var blockCount = 0;
     var block_message = [];
+    var color_map = ['rgb(255,46,64)', 'rgb(42,133,250)','rgb(200,200,0)'];
+    var color_names = ['red', 'blue', 'yellow'];
+    var red = color_map[color_names.indexOf('red')];
+    var blue = color_map[color_names.indexOf('blue')];
+    var yellow = color_map[color_names.indexOf('yellow')];
     
     //keep track of trial count per trial
     var condCount = [];
@@ -551,7 +556,7 @@
         //if the color of the word matches
         //the color of the button, the trial
         //is correct, and we mark it as such
-        correct = (frame.color === tmbUI.response) ? 1:0;
+        correct = (color_names[color_map.indexOf(frame.color)] === tmbUI.response) ? 1:0;
 
         // store the results
         results.push(
@@ -592,16 +597,18 @@
                 '20pt');
         }
         else if (frame.type==="practice" && !correct){
-			
+        
+        
+			color_word = color_names[color_map.indexOf(frame.color)];	
 			if (stroop_version == 'words' | stroop_version == 'color'){
 			
 				var alertMessage = "Incorrect.<br><br>" +
-					"The word was colored <b style = 'color:"+frame.color+"'>" +frame.color+ "</b>. <br>" +
-					"You should have pressed the " + frame.color.substr(0,1).toUpperCase() + " button for <b style = 'color:"+frame.color+"'>" +frame.color+ "</b><br><br>";
+					"The word was colored <b style = 'color:"+frame.color+"'>" + color_word + "</b>. <br>" +
+					"You should have pressed the " + frame.color.substr(0,1).toUpperCase() + " button for <b style = 'color:"+frame.color+"'>" +color_word+ "</b><br><br>";
             } else {
             	var alertMessage = "Incorrect.<br><br>" +
-					"The image was colored <b style = 'color:"+frame.color+"'>" +frame.color+ "</b>. <br>" +
-					"You should have pressed the " + frame.color.substr(0,1).toUpperCase() + " button for <b style = 'color:"+frame.color+"'>" +frame.color+ "</b><br><br>";
+					"The image was colored <b style = 'color:"+frame.color+"'>" +color_word+ "</b>. <br>" +
+					"You should have pressed the " + frame.color.substr(0,1).toUpperCase() + " button for <b style = 'color:"+frame.color+"'>" +color_word+ "</b><br><br>";
             }
                 
             showAlert(alertMessage,
@@ -912,56 +919,49 @@
                     image: 'Images/Faces/N1.png'
                 });
         }*/
-
-		frameSequence.push(
-            {
-                type: 'begin',
-                message:"<h3>Color Naming Test</h3><img style='max-width:400px;margin-top: -35px;'" +
-                            " src='Images/Faces/N1b.png'><br><br>",
-                word:'',
-                color:'red',
-                image: 'Images/Faces/N1b.png'
-        });
-        
         
         //create demonstration trials
-        var demoColors = ['red', 'red', 'red', 'red', 'blue', ''];
+        var demoColors = [red, red, red, red, red, blue, ''];
         if (stroop_version == 'faces'){
-			var messageArray = ["On each trial, you will see a face or oval.",
+			var messageArray = ["<h3>Color Naming Test</h3>",
+				"On each trial, you will see a face or oval.",
 				"Your task is to select the color of the face or oval as quickly as possible.",
 				"You will select the color using the buttons below, where:<BR>R = RED, B = BLUE, and Y = YELLOW",
 				"For example, on this trial you would hit the R button, since the face is RED.",
 				"On this trial, you would hit the B button, since the oval is blue.",
 				"Remember to always click the button corresponding to the color of the face or oval.<BR><BR>Please do this as quickly as possible while remaining accurate.<BR><BR>Please click below to begin practice trials."];
-			var demoImages = ['Images/Faces/N1b.png', 'Images/Faces/N1b.png', 'Images/Faces/N1b.png', 'Images/Faces/N1b.png', '', ''];
-			var demoWords = ['', '', '', '', '', ''];
+			var demoImages = ['Images/Faces/N1b.png', 'Images/Faces/N1b.png', 'Images/Faces/N1b.png', 'Images/Faces/N1b.png', 'Images/Faces/N1b.png', '', ''];
+			var demoWords = ['','', '', '', '', '', ''];
         } else if (stroop_version == 'scenes' | stroop_version == 'snakes'){
-        	var messageArray = ["On each trial, you will see an image or rectangle.",
+        	var messageArray = ["<h3>Color Naming Test</h3>",
+        		"On each trial, you will see an image or rectangle.",
 				"Your task is to select the color of the image or rectangle as quickly as possible.",
 				"You will select the color using the buttons below, where:<BR>R = RED, B = BLUE, and Y = YELLOW",
 				"For example, on this trial you would hit the R button, since the image is RED.",
 				"On this trial, you would hit the B button, since the rectangle is blue.",
 				"Remember to always click the button corresponding to the color of the image or rectangle.<BR><BR>Please do this as quickly as possible while remaining accurate.<BR><BR>Please click below to begin practice trials."];
-			var demoImages = ['Images/Scenes/N1b.jpg', 'Images/Scenes/N1b.jpg', 'Images/Scenes/N1b.jpg', 'Images/Scenes/N1b.jpg', '', ''];
-			var demoWords = ['', '', '', '', '', ''];
+			var demoImages = ['Images/Scenes/N1b.jpg','Images/Scenes/N1b.jpg', 'Images/Scenes/N1b.jpg', 'Images/Scenes/N1b.jpg', 'Images/Scenes/N1b.jpg', 'Images/Scenes/whiteframe.png', 'Images/Scenes/whiteframe.png'];
+			var demoWords = ['', '', '', '', '', '', ''];
         } else if (stroop_version == 'words'){
-        	var messageArray = ["On each trial, you will see a word or letters displayed in colored text.",
+        	var messageArray = ["<h3>Color Naming Test</h3>",
+        		"On each trial, you will see a word or letters displayed in colored text.",
 				"Your task is to select the color of the text as quickly as possible.",
 				"You will select the color using the buttons below, where:<BR>R = RED, B = BLUE, and Y = YELLOW",
 				"For example, on this trial you would hit the R button, since the text is colored RED.",
 				"On this trial, you would hit the B button, since the text is colored blue.",
 				"Remember to always click the button corresponding to the color of the text, regardless of what the word says.<BR><BR>Please do this as quickly as possible while remaining accurate.<BR><BR>Please click below to begin practice trials."];
-			var demoImages = ['', '', '', '', '', ''];
-			var demoWords = ['science', 'science', 'science', 'science', 'XXXXXX', ''];
+			var demoImages = ['', '', '', '', '', '', ''];
+			var demoWords = ['science', 'science', 'science', 'science', 'science', 'XXXXXX', ''];
         } else if (stroop_version == 'color'){
-        	var messageArray = ["On each trial, you will see a word or letters displayed in colored text.",
+        	var messageArray = ["<h3>Color Naming Test</h3>",
+        		"On each trial, you will see a word or letters displayed in colored text.",
 				"Your task is to select the color of the text as quickly as possible.",
 				"You will select the color using the buttons below, where:<BR>R = RED, B = BLUE, and Y = YELLOW",
 				"For example, on this trial you would hit the R button, since the text is colored RED.",
 				"On this trial, you would hit the B button, since the text is colored blue.",
 				"Remember to always click the button corresponding to the color of the text, regardless of what the word says.<BR><BR>Please do this as quickly as possible while remaining accurate.<BR><BR>Please click below to begin practice trials."];
-			var demoImages = ['', '', '', '', '', ''];
-			var demoWords = ['XXXXXX', 'XXXXXX', 'XXXXXX', 'XXXXXX', 'yellow', ''];
+			var demoImages = ['', '', '', '', '', '', ''];
+			var demoWords = ['blue', 'XXXXXX', 'XXXXXX', 'XXXXXX', 'XXXXXX', 'yellow', ''];
 		}
         for(var i = 0; i < messageArray.length; i++){
 			frameSequence.push(
@@ -978,7 +978,7 @@
 		//create practice trials		
 		var nTrialsPractice = 6;
 		condition = ['neutral', 'neutral', 'empty', 'neutral', 'neutral', 'empty'];
-		color = ['blue', 'red', 'yellow', 'red', 'yellow', 'blue'];
+		color = [blue, red, yellow, red, yellow, blue];
 		if (stroop_version == 'words'){
 			image = ['','','','','',''];
 			word = ['writer','office','XXXXXX','theory','book','XXXXXX']; 
@@ -991,7 +991,11 @@
 			word = [];
 			for (p=1; p<=nTrialsPractice; p++){
 				if (condition[p-1] == 'empty'){
-					image[p-1] = '';
+					if (stroop_version == 'faces'){
+						image[p-1] = '';
+					} else {
+						image[p-1] = 'Images/Scenes/whiteframe.png'
+					}
 				} else {
 					word[p-1] = '';
 					image[p-1] = 'Images/' + folder + '/N' + p + 'b' + ext;
@@ -1035,7 +1039,7 @@
 				condition = 'neutral';
 				condNumber = 0;
 				whichImage = trialArray[i]%(numTrials/3)%nImages + 1;
-				color = colorVar[condNumber][condCount[condNumber]];
+				color = color_map[color_names.indexOf(colorVar[condNumber][condCount[condNumber]])];
 				if (stroop_version == 'words'){
 					image = '';
 					word = wordsN[whichImage-1];
@@ -1051,7 +1055,7 @@
 				condition = 'threat';
 				condNumber = 1;
 				whichImage = trialArray[i]%(numTrials/3)%nImages + 1;
-				color = colorVar[condNumber][condCount[condNumber]];
+				color = color_map[color_names.indexOf(colorVar[condNumber][condCount[condNumber]])];
 				if (stroop_version == 'words'){
 					image = '';
 					word = wordsT[whichImage-1];
@@ -1068,10 +1072,13 @@
 			} else if (trialArray[i] > 2*numTrials/3) { // nonword/object
 				condNumber = 2;
 				condition = 'empty';
-				color = colorVar[condNumber][condCount[condNumber]];
+				color = color_map[color_names.indexOf(colorVar[condNumber][condCount[condNumber]])];
 				if (stroop_version == 'words' | stroop_version == 'color'){
 					image = '';
 					word = 'XXXXXX';
+				} else if (stroop_version == 'scenes' | stroop_version == 'snakes'){
+					image = 'Images/Scenes/whiteframe.png';
+					word = '';
 				} else {
 					image = '';
 					word = '';
@@ -1088,7 +1095,7 @@
 			
 			if (i%(numTrials/nConds) == 0){
 				frameSequence.push({
-					type: "message",
+					type: "demo",
 					message: block_message[blockCount],
 					word: '',
 					condition: '',
@@ -1315,7 +1322,7 @@
         disableDoubleTapZoom();
 
 
-        var images = ['fixation.png', "stroop_instructions.png","stroop_task.png", "Images/Faces/whiteframe.png"];
+        var images = ['fixation.png', "Images/Faces/whiteframe.png","Images/Scenes/whiteframe.png", "continue.png"];
         
         if (stroop_version == 'faces' | stroop_version == 'scenes' | stroop_version == 'snakes'){
 			for (i = 1; i <= nImages; i++){
