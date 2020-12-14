@@ -417,7 +417,7 @@
     var filename;                   // URL parameter: filename for data
     var usage = "";                 // URL parameter: show usage
     var iti = getUrlParameters("iti", "", true); //iti fixed or variable?
-    var responseTime = 500000;        // amount of time in ms participant has to respond
+    var responseTime = 5000;        // amount of time in ms participant has to respond
     var nFaces = 10;
     var nScenes = 18;
     var nWords = 18;
@@ -536,11 +536,13 @@
     var supportedColors =
         ["purple","red","yellow","blue","green","orange"];    //colors supported by this version of the Stroop Task
     var numTrials = 54;             //number of trials
+    
+    /*
     var percentCongruent = 50;      //percentage of trials that should be congruent - set to 0 if not using rgby
     var allowRepeatWord = 3;        //number of times words can repeat (set to 0 for no repeats)
     var allowRepeatColor = 3;       //number of times colors can repeat (set to 0 for no repeats)
     var allowPerfectRepeat = 0;     //number of times color AND word can repeat (set to 0 for no repeats)
-    var onlyShowRelevant = "true"; //URL parameter: whether to delete some irrelevant info from outcomes, like the colors in unused buttons
+    var onlyShowRelevant = "true"; //URL parameter: whether to delete some irrelevant info from outcomes, like the colors in unused buttons*/
 
     tmbUI.onreadyUI = function()
     {
@@ -563,6 +565,7 @@
             {
                 type: frame.type, // one of practice or test
                 stimColor:frame.color, //color of word
+                stimColorName: color_names[color_map.indexOf(frame.color)],
                 wordText:frame.word, //word shown,
                 image:frame.image, //image shown
                 condition: frame.condition, //threat, neutral, or empty
@@ -687,7 +690,11 @@
             }else{// deal with practice and test frames
                 // chain the stimulus presentation
                 if (frame.type != 'practice'){
-                	getID("counter").innerHTML = "<b>" + frame.count + " of " + numTrials/3 + "</b>";
+                	var fc = frame.count%(numTrials/3)
+                	if (fc == 0){
+                		fc = numTrials/3;
+                	}
+                	getID("counter").innerHTML = "<b>" + fc + " of " + numTrials/3 + "</b>";
                 } else {
                 	getID("counter").innerHTML = "";
                 }
@@ -794,6 +801,7 @@
                 }
                 else outcomes[color+"Location"] = "unused"
             }
+            
             //remove any unused colors if we only want to show relevant info
             if (onlyShowRelevant === "true")
                 Object.keys(outcomes).filter(function(value){return outcomes[value]==="unused"}).forEach(function(value){delete outcomes[value]});
