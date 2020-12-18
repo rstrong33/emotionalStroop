@@ -283,6 +283,18 @@
             display: none;
         }
         
+        #stroopTargetPhotoDemo{
+            display: block;
+            width: 300px;
+            height: 300px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-top: -200px;
+            margin-left: -150px;
+            display: none;
+        }
+        
         #whiteOval{
             display: block;
             width: 500px;
@@ -292,6 +304,18 @@
             top: 50%;
             margin-top: -100px;
             margin-left: -250px;
+            display: none;
+        }
+        
+        #whiteOvalDemo{
+            display: block;
+            width: 300px;
+            height: 300px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-top: -100px;
+            margin-left: -150px;
             display: none;
         }
         
@@ -306,6 +330,17 @@
             margin-left: -250px;
         }
         
+        #mainphotoDemo{
+            display: block;
+            width: 300px;
+            height: 300px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-top: -100px;
+            margin-left: -150px;
+        }
+        
         
         #stroopPhoto{
             display: block;
@@ -315,6 +350,17 @@
             left: 50%;
             top: 50%;
             margin-top: -250px;
+            margin-left: -250px;
+        }
+        
+        #stroopPhotoDemo{
+            display: block;
+            width: 500px;
+            height: 500px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-top: -300px;
             margin-left: -250px;
         }
         
@@ -329,6 +375,17 @@
             margin-left: -250px;
         }
         
+        #ovalDemo{
+            display: block;
+            width: 300px;
+            height: 300px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-top: -200px;
+            margin-left: -150px;
+        }
+        
         #colorFilter{
             display: block;
             opacity: 0.33;
@@ -339,6 +396,19 @@
             top: 50%;
             margin-top: -250px;
             margin-left: -250px;
+            display: none;
+        }
+        
+        #colorFilterDemo{
+            display: block;
+            opacity: 0.33;
+            width: 300px;
+            height: 300px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-top: -150px;
+            margin-left: -150px;
             display: none;
         }
         
@@ -361,7 +431,7 @@
             position: absolute;
             top: 50%;
             left: 50%;
-            margin-top: -320px;
+            margin-top: -250px;
             margin-left: -150px;
             text-align: center;
             font-size: 12pt;
@@ -656,15 +726,15 @@
             } else if (frame.type === "demo"){
             	getID("demoText").innerHTML = frame.message;
             	if (stroop_version == 'faces'){
-					getID("mainphoto").src = frame.image;
-					getID("colorFilter").style.background = frame.color;
+					getID("mainphotoDemo").src = frame.image;
+					getID("colorFilterDemo").style.background = frame.color;
 					var divsToShow = colorArray.invoke(function(e){return e+"Div";})
-					.concat(["responseContainer","stroopPhoto","stroopTargetPhoto", "colorFilter", "whiteOval", "demoText", "demoButton", "continueButton"]); 
+					.concat(["responseContainer","stroopPhotoDemo","stroopTargetPhotoDemo", "colorFilterDemo", "whiteOvalDemo", "demoText", "demoButton", "continueButton"]); 
 				} else if (stroop_version == 'scenes' | stroop_version == 'snakes'){
-					getID("mainphoto").src = frame.image;
-					getID("colorFilter").style.background = frame.color;
+					getID("mainphotoDemo").src = frame.image;
+					getID("colorFilterDemo").style.background = frame.color;
 					var divsToShow = colorArray.invoke(function(e){return e+"Div";})
-					.concat(["responseContainer","stroopPhoto","stroopTargetPhoto", "colorFilter", "demoText", "demoButton", "continueButton"]);                        	
+					.concat(["responseContainer","stroopPhotoDemo","stroopTargetPhotoDemo", "colorFilterDemo", "demoText", "demoButton", "continueButton"]);                        	
 				} else {
 					getID("stroopTarget").innerHTML = frame.word.toUpperCase();
 					getID("stroopTarget").style.color = frame.color;
@@ -1102,13 +1172,21 @@
 			delay_time = fixationTime[Math.floor(Math.random() * fixationTime.length)];
 			
 			if (i%(numTrials/nConds) == 0){
+				if (stroop_version == 'snakes' | stroop_version == 'scenes'){
+					image = 'Images/Scenes/whiteframe.png';
+				} else if (stroop_version == 'faces') {
+					image = 'Images/Faces/whiteframe.png';
+				} else {
+					image = '';
+				}
+				
 				frameSequence.push({
 					type: "demo",
 					message: block_message[blockCount],
 					word: '',
 					condition: '',
 					color: '',
-					image: '',
+					image: image,
 					delay_time: '',
 					trial_id: ''
 				}
@@ -1263,6 +1341,20 @@
     			}
     		}
     		getID('fixationDiv').style.marginTop = '-110px'
+    		
+    		demothings2change = ['stroopTargetPhotoDemo', 'stroopPhotoDemo', 'colorFilterDemo', 'mainphotoDemo' ];
+    		sceneSizeSeedDemo = 200;
+        	for (i = 0; i < demothings2change.length; i++){
+        		getID(demothings2change[i]).style.width = (sceneSizeSeedDemo*640/480) + 'px';
+    			getID(demothings2change[i]).style.marginLeft = -1*(sceneSizeSeedDemo*640/480)/2 + 'px';
+    			getID(demothings2change[i]).style.height = sceneSizeSeedDemo + 'px';
+    			if (demothings2change[i] == 'colorFilterDemo'){
+    				getID(demothings2change[i]).style.marginTop =  -1*(sceneSizeSeedDemo/2 + 40) + 'px';
+    			} else {
+    				getID(demothings2change[i]).style.marginTop =  -1*(sceneSizeSeedDemo/2 + 20) + 'px';
+    			}
+    		}
+    		
     	} else if (stroop_version == 'words' | stroop_version == 'color'){
     		getID('fixationDiv').style.marginTop = '-110px'
     	}
@@ -1367,6 +1459,12 @@
 		<div id ="stroopTargetPhoto"><img src="Images/Faces/N1a.png" id ="mainphoto"></div>
 		<div id ="colorFilter"></div>
 		<div id ="whiteOval"><img id ="oval" src="Images/Faces/whiteframe.png"></div>
+	</div>
+	
+	<div id=stroopPhotoDemo>
+		<div id ="stroopTargetPhotoDemo"><img src="Images/Faces/N1a.png" id ="mainphotoDemo"></div>
+		<div id ="colorFilterDemo"></div>
+		<div id ="whiteOvalDemo"><img id ="ovalDemo" src="Images/Faces/whiteframe.png"></div>
 	</div>
 	
 	<div id="demoText"></div>
