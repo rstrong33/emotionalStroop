@@ -43,7 +43,7 @@
 
     <!-- End of metadata ******************************************************* -->
 
-<!-- © 2019 The Many Brains Project, Inc.
+<!-- © 2020 The Many Brains Project, Inc.
 
 
 -->
@@ -480,35 +480,36 @@
     var results = [];               // array to store trials details and responses
     var outcomes = {};              // object containing outcome variables
     var seed;                       // URL parameter: random number generator seed
-    var demo;                       // URL parameter: run in demo mode
+    //var demo;                       // URL parameter: run in demo mode
     var debug;                      // URL parameter: output to console
-    var showresults;                // URL parameter: if they want to show results in a popup window
-    var autosave;                   // URL parameter: if they want to save data in a file automatically
-    var filename;                   // URL parameter: filename for data
-    var usage = "";                 // URL parameter: show usage
+    //var showresults;                // URL parameter: if they want to show results in a popup window
+    //var autosave;                   // URL parameter: if they want to save data in a file automatically
+    //var filename;                   // URL parameter: filename for data
+    //var usage = "";                 // URL parameter: show usage
     var iti = getUrlParameters("iti", "", true); //iti fixed or variable?
+    var itiVar = [];				//for keeping track of iti
     var responseTime = 5000;        // amount of time in ms participant has to respond
-    var nFaces = 10;
-    var nScenes = 18;
-    var nWords = 18;
-    var nConds = 3;
-    var scene_height = 180;
-    var seed_width = 400;
-    var colorVar = [];
-    var blockCount = 0;
-    var block_message = [];
-    var color_map = ['rgb(255,46,64)', 'rgb(42,133,250)','rgb(200,200,0)'];
-    var color_names = ['red', 'blue', 'yellow'];
+    var nFaces = 10;				//number of face identities to load
+    var nScenes = 18;				//number of scene photos to load per condition
+    var nWords = 18;				//number of words per condition	
+    var nConds = 3;					//number of conditions
+    var scene_height = 180;			//height of scene images, in pixels
+    var seed_width = 400;			//for scaling image sizing
+    var colorVar = [];				//vector of colors that are used
+    var blockCount = 0;				//for keeping track of what block we are on 
+    var block_message = [];			//later contains message for each block
+    var color_names = ['red', 'blue', 'yellow']; //colors that are used
+    var color_map = ['rgb(255,46,64)', 'rgb(42,133,250)','rgb(200,200,0)']; //rgb of used colors
     var red = color_map[color_names.indexOf('red')];
     var blue = color_map[color_names.indexOf('blue')];
     var yellow = color_map[color_names.indexOf('yellow')];
+
     
     //keep track of trial count per trial
     var condCount = [];
     for (c = 0; c < nConds; c++){
     	condCount[c] = 0;
     }
-    
         
     //default parameters
     if (!stroop_version){
@@ -525,7 +526,7 @@
     if (iti == 'fixed'){
     	var fixationTime = [1000];   // amount of time in ms fixation cross is shown
     } else if (iti == 'variable'){
-    	var fixationTime = [700, 900, 1100, 1300, 1500];   // amount of time in ms fixation cross is shown - RS got this from choiceRT
+    	var fixationTime = [700, 700, 700, 700, 700, 700, 700, 700, 700, 700, 700, 900, 900, 900, 1100, 1100, 1300, 1500];   // amount of time in ms fixation cross is shown - hardcoded for 18 trials per condition
     }
     
     //wordlist to use
@@ -608,11 +609,8 @@
     var numTrials = 54;             //number of trials
     
     /*
-    var percentCongruent = 50;      //percentage of trials that should be congruent - set to 0 if not using rgby
-    var allowRepeatWord = 3;        //number of times words can repeat (set to 0 for no repeats)
     var allowRepeatColor = 3;       //number of times colors can repeat (set to 0 for no repeats)
-    var allowPerfectRepeat = 0;     //number of times color AND word can repeat (set to 0 for no repeats)
-    var onlyShowRelevant = "true"; //URL parameter: whether to delete some irrelevant info from outcomes, like the colors in unused buttons*/
+    */
 
     tmbUI.onreadyUI = function()
     {
@@ -638,6 +636,8 @@
                 stimColorName: color_names[color_map.indexOf(frame.color)],
                 wordText:frame.word, //word shown,
                 image:frame.image, //image shown
+                iti:frame.delay_time, //iti
+                trial_id: frame.trial_id, //trial id
                 condition: frame.condition, //threat, neutral, or empty
                 response: tmbUI.response, // button pressed
                 correct: correct, // boolean correct
@@ -819,7 +819,7 @@
         // else if the sequence is empty, we are done!
         else
         {
-
+			/* RS has not done outcomes yet, below is Luke's code for original stroop version
             // outcomes computations
             var tmp1, tmp2, tmp3,score;
 
@@ -935,7 +935,7 @@
             else
             {
                 tmbSubmitToServer(results,score,outcomes);
-            }
+            } */
         }
     }
 
@@ -966,37 +966,6 @@
                 "test": ["Excellent work!<br><br> With this, we are ready<br>to begin the experiment. <br><br>" +
                 "Try to respond as <b>quickly</b> <br>and as <b>accurately</b> as you can.<br><br><br>"]
             };
-
-		/*
-        // type of frame to display
-        Math.seedrandom ="StroopPractice";
-        var frameType = ["begin","message","message",
-            "practice","practice",
-            "message","message","message","message",
-            "practice", "practice","practice","practice","message"];
-
-        // message to display
-        var frameMessage = [testMessage.begin,testMessage.practice[0],testMessage.practice[1],
-                            "","",
-                            testMessage.practice[2],testMessage.practice[3],
-                            testMessage.practice[4],testMessage.practice[5],
-                            "","","","",testMessage.test[0]];
-        var word = ["","","","WORD","WORD","","","","","YELLOW","green","red","red",""];
-        var color = ["","","",colorArray[0],colorArray[1],"","","","",
-                    colorArray[0],colorArray[0],colorArray[1],colorArray[0],""];
-
-        // push all components into the frames chain
-        for(var i = 0; i < frameType.length; i++)
-        {
-            frameSequence.push(
-                {
-                    type:frameType[i],
-                    message:frameMessage[i],
-                    word:word[i],
-                    color:color[i],
-                    image: 'Images/Faces/N1.png'
-                });
-        }*/
         
         //create demonstration trials
         var demoColors = [red, red, red, red, red, blue, ''];
@@ -1118,6 +1087,7 @@
 				condNumber = 0;
 				whichImage = trialArray[i]%(numTrials/3)%nImages + 1;
 				color = color_map[color_names.indexOf(colorVar[condNumber][condCount[condNumber]])];
+				delay_time = itiVar[condNumber][condCount[condNumber]];
 				if (stroop_version == 'words'){
 					image = '';
 					word = wordsN[whichImage-1];
@@ -1134,6 +1104,7 @@
 				condNumber = 1;
 				whichImage = trialArray[i]%(numTrials/3)%nImages + 1;
 				color = color_map[color_names.indexOf(colorVar[condNumber][condCount[condNumber]])];
+				delay_time = itiVar[condNumber][condCount[condNumber]];
 				if (stroop_version == 'words'){
 					image = '';
 					word = wordsT[whichImage-1];
@@ -1151,6 +1122,7 @@
 				condNumber = 2;
 				condition = 'empty';
 				color = color_map[color_names.indexOf(colorVar[condNumber][condCount[condNumber]])];
+				delay_time = itiVar[condNumber][condCount[condNumber]];
 				if (stroop_version == 'words' | stroop_version == 'color'){
 					image = '';
 					word = 'XXXXXX';
@@ -1168,8 +1140,7 @@
 			//increase count for this trial type;
 			condCount[condNumber] = condCount[condNumber] + 1;
 			
-			//delay time
-			delay_time = fixationTime[Math.floor(Math.random() * fixationTime.length)];
+			
 			
 			if (i%(numTrials/nConds) == 0){
 				if (stroop_version == 'snakes' | stroop_version == 'scenes'){
@@ -1296,6 +1267,19 @@
         		colorVar[cond].push(colorArray[t%nConds])
         	}
         	colorVar[cond].shuffle();
+        }
+        
+        //create iti variable for main trials
+        for (cond = 0; cond < nConds; cond++){
+        	itiVar[cond] = [];
+        	for (t = 0; t < numTrials/nConds; t++){
+        		if (iti == 'fixed'){
+        			itiVar[cond].push(fixationTime[0]);
+        		} else {
+        			itiVar[cond].push(fixationTime[t])
+        		}
+        	} 
+        	itiVar[cond].shuffle();
         }
 
         var words = getUrlParameters("wordArray", "", true);
