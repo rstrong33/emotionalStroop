@@ -819,9 +819,9 @@
         // else if the sequence is empty, we are done!
         else
         {
-			/* RS has not done outcomes yet, below is Luke's code for original stroop version
+			
             // outcomes computations
-            var tmp1, tmp2, tmp3,score;
+            var tmp1, tmp2, tmp3, tmp4, score;
 
             // extract test trials
             tmp1 = results.filter(function( obj ) {return obj.type !== 'practice' &&
@@ -830,7 +830,27 @@
             // compute all-correct stats
             tmp2 = tmp1.filter(function( obj ) {return obj.correct === 1;});
             tmp3 = tmp2.pluck("rt");
+            
+            var threatCorrect = tmp3.filter(function( obj ) {return obj.condition === 'threat';});
+            var neutralCorrect = tmp3.filter(function( obj ) {return obj.condition === 'neutral';});
+            var emptyCorrect = tmp3.filter(function( obj ) {return obj.condition === 'empty';});
+            
+            outcomes.stroop_version = stroop_version;
+            outcomes.iti = iti;
+            outcomes.blocked = blocked;
+            outcomes.meanRTc_threat = threatCorrect.average().round(4);
+            outcomes.meanRTc_neutral = neutralCorrect.average().round(4);
+            outcomes.meanRTc_empty = emptyCorrect.average().round(4);
+            
+            //average of non threat conditions
+            var non_threat = [outcomes.meanRTc_neutral, outcomes.meanRTc_empty]
+            
+            //make score difference of threat condition and averaged 2 non-threat conditions
+            //higher score = less of a threat slowdown
+            outcomes.score = score = non_threat.average().round(4) - outcomes.meanRTc_threat;
+            
 
+            /*Luke's original code commented below
             // response device
             var tmp5 = tmp1[0].state;
             tmp5 = /key/i.test(tmp5) ? 'keyboard' :
@@ -838,14 +858,11 @@
                    /mouse/i.test(tmp5) ? 'mouse' :
                    /pen/i.test(tmp5) ? 'pen' :
                    'unknown';
+                   */
 
-            var tmpCongruent = tmp1.filter(function( obj ) {return obj.wordText === obj.wordColor;});
-            var tmpCongruentC = tmpCongruent.filter(function( obj ) {return obj.correct === 1;});
-            var tmpIncongruent = tmp1.filter(function( obj ) {return obj.wordText !== obj.wordColor;});
-            var tmpIncongruentC = tmpIncongruent.filter(function( obj ) {return obj.correct === 1;});
+            
 
-
-
+			/*
             outcomes["topLeft"]="unused";
             outcomes["topRight"]="unused";
             outcomes["bottomLeft"]="unused";
@@ -1081,6 +1098,30 @@
 
 		for (var i = 0; i < numTrials; i++) {
 			
+			
+			if (i%(numTrials/nConds) == 0){
+				if (stroop_version == 'snakes' | stroop_version == 'scenes'){
+					image = 'Images/Scenes/whiteframe.png';
+				} else if (stroop_version == 'faces') {
+					image = 'Images/Faces/whiteframe.png';
+				} else {
+					image = '';
+				}
+				
+				frameSequence.push({
+					type: "demo",
+					message: block_message[blockCount],
+					word: '',
+					condition: '',
+					color: '',
+					image: image,
+					delay_time: '',
+					trial_id: ''
+				}
+				);
+				blockCount++;
+			}
+			
 			//what kind of trial?
 			if (trialArray[i] <= numTrials/3){ // neutral (congruent for color stroop)
 				condition = 'neutral';
@@ -1139,32 +1180,6 @@
 			
 			//increase count for this trial type;
 			condCount[condNumber] = condCount[condNumber] + 1;
-			
-			
-			
-			if (i%(numTrials/nConds) == 0){
-				if (stroop_version == 'snakes' | stroop_version == 'scenes'){
-					image = 'Images/Scenes/whiteframe.png';
-				} else if (stroop_version == 'faces') {
-					image = 'Images/Faces/whiteframe.png';
-				} else {
-					image = '';
-				}
-				
-				frameSequence.push({
-					type: "demo",
-					message: block_message[blockCount],
-					word: '',
-					condition: '',
-					color: '',
-					image: image,
-					delay_time: '',
-					trial_id: ''
-				}
-				);
-				blockCount++;
-			}
-
 			
 			frameSequence.push(
 				{
