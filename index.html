@@ -829,11 +829,10 @@
 
             // compute all-correct stats
             tmp2 = tmp1.filter(function( obj ) {return obj.correct === 1;});
-            tmp3 = tmp2.pluck("rt");
             
-            var threatCorrect = tmp3.filter(function( obj ) {return obj.condition === 'threat';});
-            var neutralCorrect = tmp3.filter(function( obj ) {return obj.condition === 'neutral';});
-            var emptyCorrect = tmp3.filter(function( obj ) {return obj.condition === 'empty';});
+            var threatCorrect = tmp2.filter(function( obj ) {return obj.condition === 'threat';}).pluck("rt");
+            var neutralCorrect = tmp2.filter(function( obj ) {return obj.condition === 'neutral';}).pluck("rt");
+            var emptyCorrect = tmp2.filter(function( obj ) {return obj.condition === 'empty';}).pluck("rt");
             
             outcomes.stroop_version = stroop_version;
             outcomes.iti = iti;
@@ -848,6 +847,8 @@
             //make score difference of threat condition and averaged 2 non-threat conditions
             //higher score = less of a threat slowdown
             outcomes.score = score = non_threat.average().round(4) - outcomes.meanRTc_threat;
+            
+            tmbSubmitToServer(results,score,outcomes);
             
 
             /*Luke's original code commented below
@@ -928,7 +929,7 @@
             outcomes.responseDevice = tmp5;
             outcomes.testVersion = testVersion;
 
-            
+             
 
             // if debugging, output to console
             if(debug === "true") logResults([outcomes], 'cum');
@@ -952,8 +953,8 @@
             else
             {
                 tmbSubmitToServer(results,score,outcomes);
-            } */
-        }
+            }*/
+        } 
     }
 
     function setFrameSequence(){
