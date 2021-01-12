@@ -1136,7 +1136,7 @@
 				} else if (stroop_version == 'color') {
 					condition = 'congruent'
 					image = '';
-					word = color;
+					word = color_names[color_map.indexOf(color)];
 				} else {
 					image = 'Images/' + folder + '/N' + whichImage + 'a' + ext;
 					word = '';
