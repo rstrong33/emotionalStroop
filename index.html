@@ -503,6 +503,7 @@
     var red = color_map[color_names.indexOf('red')];
     var blue = color_map[color_names.indexOf('blue')];
     var yellow = color_map[color_names.indexOf('yellow')];
+    var trialArray = [];
 
     
     //keep track of trial count per trial
@@ -1086,10 +1087,19 @@
 		
 
     	//create test trials
-		var trialArray = [];
-		for (i = 1; i <= numTrials; i++){
-			trialArray.push(i);
+    	sp = [1, numTrials/3 + 1, 2*numTrials/3 + 1];
+    	
+		for (i = 0; i <= 2; i++){
+			var tmp = [];
+			for (t = sp[i]; t < sp[i] + numTrials/3; t++){
+				tmp.push(t);
+			}
+			tmp = tmp.shuffle();
+			for (t = 0; t < numTrials/3; t++){
+				trialArray.push(tmp[t]);
+			}
 		}
+		
 		
 		//shuffle trial array if not blocked
 		if (!(blocked == 'yes')){
